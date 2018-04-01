@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <!--This header defines the IDs for all the commands exposed by VisualStudio. -->
+  <Extern href="stdidcmd.h" />
+
+  <!--This header contains the command ids for the menus provided by the shell. -->
+  <Extern href="vsshlids.h" />
+
+  <Commands package="guidPackage">
+    <Groups>
+      <Group guid="guidCommandSet" id="FormatDocXmlMenuGroup" priority="0xFD10">
+        <Parent guid="guidStdEditor" id="IDM_VS_EDITOR_ADVANCED_MENU" />
+      </Group>
+    </Groups>
+
+    <Buttons>
+      <Button guid="guidCommandSet" id="FormatDocXmlInSelectionCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidCommandSet" id="FormatDocXmlMenuGroup" />
+        <Icon guid="guidImages" id="FormatDocXmlInSelectionIcon" />
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Format Doc Comments in Selection</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidCommandSet" id="FormatDocXmlInDocumentCommandId" priority="0x0101" type="Button">
+        <Parent guid="guidCommandSet" id="FormatDocXmlMenuGroup" />
+        <Icon guid="guidImages" id="FormatDocXmlInDocumentIcon" />
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Format Doc Comments in Document</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+
+    <Bitmaps>
+      <Bitmap guid="guidImages" href="Resources\FormatDocXmlCommands.png" usedList="FormatDocXmlInSelectionIcon, FormatDocXmlInDocumentIcon" />
+    </Bitmaps>
+  </Commands>
+
+  <KeyBindings>
+    <KeyBinding guid="guidCommandSet" id="FormatDocXmlInSelectionCommandId" editor="guidVSStd97" key1="e" mod1="Control" key2="x" />
+    <KeyBinding guid="guidCommandSet" id="FormatDocXmlInDocumentCommandId" editor="guidVSStd97" key1="e" mod1="Control" key2="x" mod2="Control" />
+  </KeyBindings>
+
+  <Symbols>
+    <GuidSymbol name="guidPackage" value="{8288a158-430f-4bc7-9502-0716acc4f964}" />
+
+    <GuidSymbol name="guidCommandSet" value="{ed2fe6df-2ac7-4a91-b899-baed23255208}">
+      <IDSymbol name="FormatDocXmlMenuGroup" value="0x1020" />
+      <IDSymbol name="FormatDocXmlInSelectionCommandId" value="0x0100" />
+      <IDSymbol name="FormatDocXmlInDocumentCommandId" value="0x0101" />
+    </GuidSymbol>
+
+    <GuidSymbol name="guidImages" value="{ece88ab1-2c3f-4c5f-811b-e3e2e9533ddd}" >
+      <IDSymbol name="FormatDocXmlInSelectionIcon" value="1" />
+      <IDSymbol name="FormatDocXmlInDocumentIcon" value="2" />
+    </GuidSymbol>
+  </Symbols>
+</CommandTable>
