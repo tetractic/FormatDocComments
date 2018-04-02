@@ -4,6 +4,7 @@
         <Identity Id="FormatDocXml.87225218-e97b-456a-882a-d281848c3328" Version="1.0" Language="en-US" Publisher="Carl Reinke" />
         <DisplayName>Format Doc Comments</DisplayName>
         <Description xml:space="preserve">Formats C# XML documentation comments.</Description>
+        <MoreInfo>https://marketplace.visualstudio.com/items?itemName=carlreinke.FormatDocXml</MoreInfo>
         <License>LICENSE.txt</License>
     </Metadata>
     <Installation>
