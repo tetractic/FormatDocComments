@@ -155,7 +155,7 @@ namespace FormatDocXml.Tests
         }
 
         [Fact]
-        public void TestSnugBlockElementBreaksEndTag()
+        public void TestSnugBlockElementBreaksEndTagFromContent()
         {
             var inputText =
 @"public class C {
@@ -175,7 +175,7 @@ namespace FormatDocXml.Tests
         }
 
         [Fact]
-        public void TestSnugBlockElementBreaksStartTag()
+        public void TestSnugBlockElementBreaksStartTagFromContent()
         {
             var inputText =
 @"public class C {

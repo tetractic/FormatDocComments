@@ -20,28 +20,28 @@ using static FormatDocXml.Tests.DocXmlFormatterTests;
 
 namespace FormatDocXml.Tests
 {
-    public class DocXmlFormatterInlineElementTests
+    public class DocXmlFormatterCommentTests
     {
         [Fact]
-        public void TestInlineElement()
+        public void TestComment()
         {
             var inputText =
     @"public class C {
-    /// Words and <see cref=""M1""/> and <c>words</c>.
+    /// Words and <!--words and--> words.
     public void M1() { }
 
     /// Words and
-    /// <see cref=""M2""/>
-    /// and
-    /// <c>words</c>.
+    /// <!--words
+    /// and-->
+    /// words.
     public void M2() { }
 }";
             var expectedText =
     @"public class C {
-    /// Words and <see cref=""M1""/> and <c>words</c>.
+    /// Words and <!--words and--> words.
     public void M1() { }
 
-    /// Words and <see cref=""M2""/> and <c>words</c>.
+    /// Words and <!--words and--> words.
     public void M2() { }
 }";
 
@@ -49,34 +49,34 @@ namespace FormatDocXml.Tests
         }
 
         [Fact]
-        public void TestInlineElementBreaks()
+        public void TestCommentBreaks()
         {
             var inputText =
 @"public class C {
-    /// Words <c>and</c> words.
+    /// Words <!--and--> words.
     public void M1() { }
 
-    /// Words<c> and</c> words.
+    /// Words<!-- and--> words.
     public void M2() { }
 
-    /// Words <c>and </c>words.
+    /// Words <!--and -->words.
     public void M3() { }
 
-    /// Words<c> and </c>words.
+    /// Words<!-- and -->words.
     public void M4() { }
 }";
             var expectedText =
 @"public class C {
-    /// Words <c>and</c> words.
+    /// Words <!--and--> words.
     public void M1() { }
 
-    /// Words<c> and</c> words.
+    /// Words<!-- and--> words.
     public void M2() { }
 
-    /// Words <c>and </c>words.
+    /// Words <!--and -->words.
     public void M3() { }
 
-    /// Words<c> and </c>words.
+    /// Words<!-- and -->words.
     public void M4() { }
 }";
 
@@ -85,37 +85,37 @@ namespace FormatDocXml.Tests
         }
 
         [Fact]
-        public void TestInlineElementWraps()
+        public void TestCommentWraps()
         {
             var inputText =
 @"public class C {
-    /// Words and words and words <c>and</c> words.
+    /// Words and words and words <!--and--> words.
     public void M1() { }
 
-    /// Words and words and words<c> and</c> words.
+    /// Words and words and words<!-- and--> words.
     public void M2() { }
 
-    /// Words and words and <c>words </c>and words.
+    /// Words and words and <!--words -->and words.
     public void M3() { }
 
-    /// Words and words and <c>words</c> and words.
+    /// Words and words and <!--words--> and words.
     public void M4() { }
 }";
             var expectedText =
 @"public class C {
     /// Words and words and words
-    /// <c>and</c> words.
+    /// <!--and--> words.
     public void M1() { }
 
-    /// Words and words and words<c>
-    /// and</c> words.
+    /// Words and words and words<!--
+    /// and--> words.
     public void M2() { }
 
-    /// Words and words and <c>words
-    /// </c>and words.
+    /// Words and words and <!--words
+    /// -->and words.
     public void M3() { }
 
-    /// Words and words and <c>words</c>
+    /// Words and words and <!--words-->
     /// and words.
     public void M4() { }
 }";
@@ -125,17 +125,17 @@ namespace FormatDocXml.Tests
         }
 
         [Fact]
-        public void TestInlineElementWrapsContent()
+        public void TestCommentWrapsContent()
         {
             var inputText =
 @"public class C {
-    /// Words and words and <c>words and words and</c> words.
+    /// Words and words and <!--words and words and--> words.
     public void M() { }
 }";
             var expectedText =
 @"public class C {
-    /// Words and words and <c>words and
-    /// words and</c> words.
+    /// Words and words and <!--words
+    /// and words and--> words.
     public void M() { }
 }";
 
@@ -144,61 +144,17 @@ namespace FormatDocXml.Tests
         }
 
         [Fact]
-        public void TestInlineElementSticksWithSurroundingWord()
+        public void TestCommentSticksWithSurroundingWord()
         {
             var inputText =
 @"public class C {
-    /// __________<c>__________ __________</c>__________
+    /// __________<!--__________ __________-->__________
     public void M() { }
 }";
             var expectedText =
 @"public class C {
-    /// __________<c>__________
-    /// __________</c>__________
-    public void M() { }
-}";
-
-            AssertFormat(expectedText, inputText, (config) => config
-                .WithChangedOption(DocXmlFormattingOptions.WrapColumn, 20));
-        }
-
-        [Fact]
-        public void TestInlineEmptyElementWraps()
-        {
-            var inputText =
-@"public class C {
-    /// Words and words and <see cref=""M1""/> and words.
-    public void M1() { }
-
-    /// Words and <see cref=""M2(C)""/> and words.
-    public void M2(C x) { }
-}";
-            var expectedText =
-@"public class C {
-    /// Words and words and
-    /// <see cref=""M1""/> and words.
-    public void M1() { }
-
-    /// Words and <see cref=""M2(C)""/>
-    /// and words.
-    public void M2(C x) { }
-}";
-
-            AssertFormat(expectedText, inputText, (config) => config
-                .WithChangedOption(DocXmlFormattingOptions.WrapColumn, 40));
-        }
-
-        [Fact]
-        public void TestInlineEmptyElementSticksWithSurroundingWord()
-        {
-            var inputText =
-@"public class C {
-    /// __________<see cref=""C""/>__________
-    public void M() { }
-}";
-            var expectedText =
-@"public class C {
-    /// __________<see cref=""C""/>__________
+    /// __________<!--__________
+    /// __________-->__________
     public void M() { }
 }";
 

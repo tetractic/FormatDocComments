@@ -20,28 +20,28 @@ using static FormatDocXml.Tests.DocXmlFormatterTests;
 
 namespace FormatDocXml.Tests
 {
-    public class DocXmlFormatterInlineElementTests
+    public class DocXmlFormatterCDataTests
     {
         [Fact]
-        public void TestInlineElement()
+        public void TestCData()
         {
             var inputText =
     @"public class C {
-    /// Words and <see cref=""M1""/> and <c>words</c>.
+    /// Words and <![CDATA[words and]]> words.
     public void M1() { }
 
     /// Words and
-    /// <see cref=""M2""/>
-    /// and
-    /// <c>words</c>.
+    /// <![CDATA[words
+    /// and]]>
+    /// words.
     public void M2() { }
 }";
             var expectedText =
     @"public class C {
-    /// Words and <see cref=""M1""/> and <c>words</c>.
+    /// Words and <![CDATA[words and]]> words.
     public void M1() { }
 
-    /// Words and <see cref=""M2""/> and <c>words</c>.
+    /// Words and <![CDATA[words and]]> words.
     public void M2() { }
 }";
 
@@ -49,74 +49,34 @@ namespace FormatDocXml.Tests
         }
 
         [Fact]
-        public void TestInlineElementBreaks()
+        public void TestCDataBreaks()
         {
             var inputText =
 @"public class C {
-    /// Words <c>and</c> words.
+    /// Words <![CDATA[and]]> words.
     public void M1() { }
 
-    /// Words<c> and</c> words.
+    /// Words<![CDATA[ and]]> words.
     public void M2() { }
 
-    /// Words <c>and </c>words.
+    /// Words <![CDATA[and ]]>words.
     public void M3() { }
 
-    /// Words<c> and </c>words.
+    /// Words<![CDATA[ and ]]>words.
     public void M4() { }
 }";
             var expectedText =
 @"public class C {
-    /// Words <c>and</c> words.
+    /// Words <![CDATA[and]]> words.
     public void M1() { }
 
-    /// Words<c> and</c> words.
+    /// Words<![CDATA[ and]]> words.
     public void M2() { }
 
-    /// Words <c>and </c>words.
+    /// Words <![CDATA[and ]]>words.
     public void M3() { }
 
-    /// Words<c> and </c>words.
-    public void M4() { }
-}";
-
-            AssertFormat(expectedText, inputText, (config) => config
-                .WithChangedOption(DocXmlFormattingOptions.WrapColumn, 40));
-        }
-
-        [Fact]
-        public void TestInlineElementWraps()
-        {
-            var inputText =
-@"public class C {
-    /// Words and words and words <c>and</c> words.
-    public void M1() { }
-
-    /// Words and words and words<c> and</c> words.
-    public void M2() { }
-
-    /// Words and words and <c>words </c>and words.
-    public void M3() { }
-
-    /// Words and words and <c>words</c> and words.
-    public void M4() { }
-}";
-            var expectedText =
-@"public class C {
-    /// Words and words and words
-    /// <c>and</c> words.
-    public void M1() { }
-
-    /// Words and words and words<c>
-    /// and</c> words.
-    public void M2() { }
-
-    /// Words and words and <c>words
-    /// </c>and words.
-    public void M3() { }
-
-    /// Words and words and <c>words</c>
-    /// and words.
+    /// Words<![CDATA[ and ]]>words.
     public void M4() { }
 }";
 
@@ -125,63 +85,39 @@ namespace FormatDocXml.Tests
         }
 
         [Fact]
-        public void TestInlineElementWrapsContent()
+        public void TestCDataWraps()
         {
             var inputText =
 @"public class C {
-    /// Words and words and <c>words and words and</c> words.
-    public void M() { }
-}";
-            var expectedText =
-@"public class C {
-    /// Words and words and <c>words and
-    /// words and</c> words.
-    public void M() { }
-}";
-
-            AssertFormat(expectedText, inputText, (config) => config
-                .WithChangedOption(DocXmlFormattingOptions.WrapColumn, 40));
-        }
-
-        [Fact]
-        public void TestInlineElementSticksWithSurroundingWord()
-        {
-            var inputText =
-@"public class C {
-    /// __________<c>__________ __________</c>__________
-    public void M() { }
-}";
-            var expectedText =
-@"public class C {
-    /// __________<c>__________
-    /// __________</c>__________
-    public void M() { }
-}";
-
-            AssertFormat(expectedText, inputText, (config) => config
-                .WithChangedOption(DocXmlFormattingOptions.WrapColumn, 20));
-        }
-
-        [Fact]
-        public void TestInlineEmptyElementWraps()
-        {
-            var inputText =
-@"public class C {
-    /// Words and words and <see cref=""M1""/> and words.
+    /// Words and words and <![CDATA[words]]>.
     public void M1() { }
 
-    /// Words and <see cref=""M2(C)""/> and words.
-    public void M2(C x) { }
+    /// Words and words and<![CDATA[ words]]> and words.
+    public void M2() { }
+
+    /// Words and words <![CDATA[and ]]>words.
+    public void M3() { }
+
+    /// Words and words <![CDATA[and]]> words.
+    public void M4() { }
 }";
             var expectedText =
 @"public class C {
     /// Words and words and
-    /// <see cref=""M1""/> and words.
+    /// <![CDATA[words]]>.
     public void M1() { }
 
-    /// Words and <see cref=""M2(C)""/>
-    /// and words.
-    public void M2(C x) { }
+    /// Words and words and<![CDATA[
+    /// words]]> and words.
+    public void M2() { }
+
+    /// Words and words <![CDATA[and
+    /// ]]>words.
+    public void M3() { }
+
+    /// Words and words <![CDATA[and]]>
+    /// words.
+    public void M4() { }
 }";
 
             AssertFormat(expectedText, inputText, (config) => config
@@ -189,16 +125,36 @@ namespace FormatDocXml.Tests
         }
 
         [Fact]
-        public void TestInlineEmptyElementSticksWithSurroundingWord()
+        public void TestCDataWrapsContent()
         {
             var inputText =
 @"public class C {
-    /// __________<see cref=""C""/>__________
+    /// Words and <![CDATA[words and words and]]> words.
     public void M() { }
 }";
             var expectedText =
 @"public class C {
-    /// __________<see cref=""C""/>__________
+    /// Words and <![CDATA[words and
+    /// words and]]> words.
+    public void M() { }
+}";
+
+            AssertFormat(expectedText, inputText, (config) => config
+                .WithChangedOption(DocXmlFormattingOptions.WrapColumn, 40));
+        }
+
+        [Fact]
+        public void TestCDataSticksWithSurroundingWord()
+        {
+            var inputText =
+@"public class C {
+    /// __________<![CDATA[__________ __________]]>__________
+    public void M() { }
+}";
+            var expectedText =
+@"public class C {
+    /// __________<![CDATA[__________
+    /// __________]]>__________
     public void M() { }
 }";
 
