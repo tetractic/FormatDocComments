@@ -88,6 +88,7 @@
   <ItemGroup>
     <Compile Include="DocXmlFormatterCDataTests.cs" />
     <Compile Include="DocXmlFormatterCommentTests.cs" />
+    <Compile Include="DocXmlFormatterElementTests.cs" />
     <Compile Include="DocXmlFormatterProcessingInstructionTests.cs" />
     <Compile Include="DocXmlFormatterSpanTests.cs" />
     <Compile Include="DocXmlFormatterBlockElementTests.cs" />

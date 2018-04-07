@@ -96,6 +96,88 @@ namespace FormatDocXml.Tests
         }
 
         [Fact]
+        public void TestBlockElementAttributeTruncated()
+        {
+            var inputText =
+@"public class C {
+    /// <include file
+    public void M1() { }
+
+    /// <include file=
+    public void M2() { }
+
+    /// <include file=""
+    public void M3() { }
+
+    /// <include file=""file.xml
+    public void M4() { }
+
+    /// <include file=""file.xml""
+    public void M5() { }
+}";
+            var expectedText =
+@"public class C {
+    /// <include file
+    public void M1() { }
+
+    /// <include file=
+    public void M2() { }
+
+    /// <include file=""
+    public void M3() { }
+
+    /// <include file=""file.xml
+    public void M4() { }
+
+    /// <include file=""file.xml""
+    public void M5() { }
+}";
+
+            AssertFormat(expectedText, inputText);
+        }
+
+        [Fact]
+        public void TestBlockElementCrefAttributeTruncated()
+        {
+            var inputText =
+@"public class C {
+    /// <exception cref
+    public void M1() { }
+
+    /// <exception cref=
+    public void M2() { }
+
+    /// <exception cref=""
+    public void M3() { }
+
+    /// <exception cref=""Exception
+    public void M4() { }
+
+    /// <exception cref=""Exception""
+    public void M5() { }
+}";
+            var expectedText =
+@"public class C {
+    /// <exception cref
+    public void M1() { }
+
+    /// <exception cref=
+    public void M2() { }
+
+    /// <exception cref=""
+    public void M3() { }
+
+    /// <exception cref=""Exception
+    public void M4() { }
+
+    /// <exception cref=""Exception""
+    public void M5() { }
+}";
+
+            AssertFormat(expectedText, inputText);
+        }
+
+        [Fact]
         public void TestBlockEmptyElementMissingSlash()
         {
             var inputText =
@@ -192,6 +274,88 @@ namespace FormatDocXml.Tests
     @"public class C {
     /// Words and <see cref=""M"">.
     public void M() { }
+}";
+
+            AssertFormat(expectedText, inputText);
+        }
+
+        [Fact]
+        public void TestInlineElementAttributeTruncated()
+        {
+            var inputText =
+@"public class C {
+    /// Words and <see langword
+    public void M1() { }
+
+    /// Words and <see langword=
+    public void M2() { }
+
+    /// Words and <see langword=""
+    public void M3() { }
+
+    /// Words and <see langword=""null
+    public void M4() { }
+
+    /// Words and <see langword=""null""
+    public void M5() { }
+}";
+            var expectedText =
+@"public class C {
+    /// Words and <see langword
+    public void M1() { }
+
+    /// Words and <see langword=
+    public void M2() { }
+
+    /// Words and <see langword=""
+    public void M3() { }
+
+    /// Words and <see langword=""null
+    public void M4() { }
+
+    /// Words and <see langword=""null""
+    public void M5() { }
+}";
+
+            AssertFormat(expectedText, inputText);
+        }
+
+        [Fact]
+        public void TestInlineElementCrefAttributeTruncated()
+        {
+            var inputText =
+@"public class C {
+    /// Words and <see cref
+    public void M1() { }
+
+    /// Words and <see cref=
+    public void M2() { }
+
+    /// Words and <see cref=""
+    public void M3() { }
+
+    /// Words and <see cref=""M4
+    public void M4() { }
+
+    /// Words and <see cref=""M5""
+    public void M5() { }
+}";
+            var expectedText =
+@"public class C {
+    /// Words and <see cref
+    public void M1() { }
+
+    /// Words and <see cref=
+    public void M2() { }
+
+    /// Words and <see cref=""
+    public void M3() { }
+
+    /// Words and <see cref=""M4
+    public void M4() { }
+
+    /// Words and <see cref=""M5""
+    public void M5() { }
 }";
 
             AssertFormat(expectedText, inputText);

@@ -78,6 +78,8 @@ namespace FormatDocXml
 
         private readonly List<TextChange> _wordChanges = new List<TextChange>();
 
+        private readonly Queue<TextChange> _queuedChanges = new Queue<TextChange>();
+
         private readonly StringBuilder _breakText = new StringBuilder();
 
         private readonly StringBuilder _stringBuilder = new StringBuilder();
@@ -423,8 +425,7 @@ namespace FormatDocXml
             if (node.HasLeadingTrivia)
                 AddTrivia(node.GetLeadingTrivia());
 
-            // TODO: Format insides of tag; queuing changes.
-            AddWord(node.Span);
+            FormatElementStartTag(node);
 
             if (formatting.HasFlag(ElementFormatting.Preserve))
                 _preserve += 1;
@@ -457,8 +458,7 @@ namespace FormatDocXml
             if (formatting.HasFlag(ElementFormatting.Preserve))
                 _preserve -= 1;
 
-            // TODO: Format insides of tag; queuing changes.
-            AddWord(node.Span);
+            FormatElementEndTag(node);
 
             if (node.HasTrailingTrivia)
                 AddTrivia(node.GetTrailingTrivia());
@@ -479,8 +479,13 @@ namespace FormatDocXml
             if (formatting.HasFlag(ElementFormatting.Block))
                 Break(BreakMode.LineBreak);
 
-            // TODO: Format insides of tag; queuing changes.
-            AddWordAndTrivia(node);
+            if (node.HasLeadingTrivia)
+                AddTrivia(node.GetLeadingTrivia());
+
+            FormatEmptyElementTag(node);
+
+            if (node.HasTrailingTrivia)
+                AddTrivia(node.GetTrailingTrivia());
 
             if (formatting.HasFlag(ElementFormatting.Block))
                 Break(BreakMode.LineBreak);
@@ -595,6 +600,249 @@ namespace FormatDocXml
             }
         }
 
+        private void FormatElementStartTag(XmlElementStartTagSyntax node)
+        {
+            if (node.ContainsSkippedText)
+            {
+                AddWord(node.Span);
+            }
+            else
+            {
+                AddWord(node.LessThanToken.Span);
+
+                EnqueueTrailingTriviaChange(node.LessThanToken, string.Empty);
+
+                EnqueueLeadingTriviaChange(node.Name, string.Empty);
+
+                FormatTagName(node.Name);
+
+                EnqueueTrailingTriviaChange(node.Name, string.Empty);
+
+                foreach (var attribute in node.Attributes)
+                {
+                    EnqueueLeadingTriviaChange(attribute, " ");
+
+                    FormatTagAttribute(attribute);
+
+                    EnqueueTrailingTriviaChange(attribute, string.Empty);
+                }
+
+                EnqueueLeadingTriviaChange(node.GreaterThanToken, string.Empty);
+
+                AddWord(node.GreaterThanToken.Span);
+            }
+        }
+
+        private void FormatElementEndTag(XmlElementEndTagSyntax node)
+        {
+            if (node.ContainsSkippedText)
+            {
+                AddWord(node.Span);
+            }
+            else
+            {
+                AddWord(node.LessThanSlashToken.Span);
+
+                EnqueueTrailingTriviaChange(node.LessThanSlashToken, string.Empty);
+
+                EnqueueLeadingTriviaChange(node.Name, string.Empty);
+
+                FormatTagName(node.Name);
+
+                EnqueueTrailingTriviaChange(node.Name, string.Empty);
+
+                EnqueueLeadingTriviaChange(node.GreaterThanToken, string.Empty);
+
+                AddWord(node.GreaterThanToken.Span);
+            }
+        }
+
+        private void FormatEmptyElementTag(XmlEmptyElementSyntax node)
+        {
+            if (node.ContainsSkippedText)
+            {
+                AddWord(node.Span);
+            }
+            else
+            {
+                AddWord(node.LessThanToken.Span);
+
+                EnqueueTrailingTriviaChange(node.LessThanToken, string.Empty);
+
+                EnqueueLeadingTriviaChange(node.Name, string.Empty);
+
+                FormatTagName(node.Name);
+
+                EnqueueTrailingTriviaChange(node.Name, string.Empty);
+
+                foreach (var attribute in node.Attributes)
+                {
+                    EnqueueLeadingTriviaChange(attribute, " ");
+
+                    FormatTagAttribute(attribute);
+
+                    EnqueueTrailingTriviaChange(attribute, string.Empty);
+                }
+
+                EnqueueLeadingTriviaChange(node.SlashGreaterThanToken, string.Empty);
+
+                AddWord(node.SlashGreaterThanToken.Span);
+            }
+        }
+
+        private void FormatTagName(XmlNameSyntax node)
+        {
+            if (node.Prefix != null)
+            {
+                FormatTagNamePrefix(node.Prefix);
+
+                EnqueueTrailingTriviaChange(node.Prefix, string.Empty);
+
+                EnqueueLeadingTriviaChange(node.LocalName, string.Empty);
+            }
+
+            AddWord(node.LocalName.Span);
+        }
+
+        private void FormatTagNamePrefix(XmlPrefixSyntax node)
+        {
+            AddWord(node.Prefix.Span);
+
+            EnqueueTrailingTriviaChange(node.Prefix, string.Empty);
+
+            EnqueueLeadingTriviaChange(node.ColonToken, string.Empty);
+
+            AddWord(node.ColonToken.Span);
+        }
+
+        private void FormatTagAttribute(XmlAttributeSyntax node)
+        {
+            FormatTagName(node.Name);
+
+            EnqueueTrailingTriviaChange(node.Name, string.Empty);
+
+            EnqueueLeadingTriviaChange(node.EqualsToken, string.Empty);
+
+            AddWord(node.EqualsToken.Span);
+
+            EnqueueTrailingTriviaChange(node.EqualsToken, string.Empty);
+
+            EnqueueLeadingTriviaChange(node.StartQuoteToken, string.Empty);
+
+            AddWord(node.StartQuoteToken.Span);
+
+            switch (node.Kind())
+            {
+                case SyntaxKind.XmlCrefAttribute:
+                    FormatTagCrefAttribute((XmlCrefAttributeSyntax)node);
+                    break;
+                case SyntaxKind.XmlNameAttribute:
+                    FormatTagNameAttribute((XmlNameAttributeSyntax)node);
+                    break;
+                case SyntaxKind.XmlTextAttribute:
+                    FormatTagTextAttribute((XmlTextAttributeSyntax)node);
+                    break;
+                default:
+                    FormatTagUnknownAttribute(node);
+                    break;
+            }
+
+            AddWord(node.EndQuoteToken.Span);
+        }
+
+        private void FormatTagCrefAttribute(XmlCrefAttributeSyntax node)
+        {
+            EnqueueTrailingTriviaChange(node.StartQuoteToken, string.Empty);
+
+            EnqueueLeadingTriviaChange(node.Cref, string.Empty);
+
+            AddWord(node.Cref.Span);
+
+            EnqueueTrailingTriviaChange(node.Cref, string.Empty);
+
+            EnqueueLeadingTriviaChange(node.EndQuoteToken, string.Empty);
+        }
+
+        private void FormatTagNameAttribute(XmlNameAttributeSyntax node)
+        {
+            EnqueueTrailingTriviaChange(node.StartQuoteToken, string.Empty);
+
+            EnqueueLeadingTriviaChange(node.Identifier, string.Empty);
+
+            AddWord(node.Identifier.Span);
+
+            EnqueueTrailingTriviaChange(node.Identifier, string.Empty);
+
+            EnqueueLeadingTriviaChange(node.EndQuoteToken, string.Empty);
+        }
+
+        private void FormatTagTextAttribute(XmlTextAttributeSyntax node)
+        {
+            if (node.StartQuoteToken.HasTrailingTrivia)
+                AddTrivia(node.StartQuoteToken.TrailingTrivia);
+
+            foreach (var token in node.DescendantTokens(TextSpan.FromBounds(node.StartQuoteToken.Span.End, node.EndQuoteToken.Span.Start)))
+            {
+                if (token.HasLeadingTrivia)
+                    AddTrivia(token.LeadingTrivia);
+
+                switch (token.Kind())
+                {
+                    case SyntaxKind.XmlTextLiteralNewLineToken:
+                        Break(BreakMode.Preserve);
+                        AddBreakAndTrivia(token);
+                        break;
+                    default:
+                        AddWord(token.Span);
+                        break;
+                }
+
+                if (token.HasTrailingTrivia)
+                    AddTrivia(token.TrailingTrivia);
+            }
+
+            if (node.EndQuoteToken.HasLeadingTrivia)
+                AddTrivia(node.EndQuoteToken.LeadingTrivia);
+        }
+
+        private void FormatTagUnknownAttribute(XmlAttributeSyntax node)
+        {
+            Debug.Assert(false);
+
+            AddWord(TextSpan.FromBounds(node.StartQuoteToken.Span.End, node.EndQuoteToken.Span.Start));
+        }
+
+        private void EnqueueLeadingTriviaChange(SyntaxToken token, string newText)
+        {
+            if (token.HasLeadingTrivia)
+                EnqueueChange(token.LeadingTrivia.Span, newText);
+        }
+
+        private void EnqueueTrailingTriviaChange(SyntaxToken token, string newText)
+        {
+            if (token.HasTrailingTrivia)
+                EnqueueChange(token.TrailingTrivia.Span, newText);
+        }
+
+        private void EnqueueLeadingTriviaChange(CSharpSyntaxNode node, string newText)
+        {
+            if (node.HasLeadingTrivia)
+                EnqueueChange(node.GetLeadingTrivia().Span, newText);
+        }
+
+        private void EnqueueTrailingTriviaChange(CSharpSyntaxNode node, string newText)
+        {
+            if (node.HasTrailingTrivia)
+                EnqueueChange(node.GetTrailingTrivia().Span, newText);
+        }
+
+        private void EnqueueChange(TextSpan span, string newText)
+        {
+            var text = GetText(span);
+            if (newText != text)
+                _queuedChanges.Enqueue(new TextChange(span, newText));
+        }
+
         private void AddTrivia(SyntaxTriviaList trivia)
         {
             foreach (var trivium in trivia)
@@ -706,6 +954,17 @@ namespace FormatDocXml
             Debug.Assert(_breakStart <= _wordStart);
             Debug.Assert(_wordStart <= _wordEnd);
 
+            // Dequeue changes applicable to the word.
+            while (_queuedChanges.Count > 0)
+            {
+                var change = _queuedChanges.Peek();
+                if (change.Span.Start >= _wordEnd)
+                    break;
+                Debug.Assert(change.Span.Start >= _wordStart);
+                Debug.Assert(change.Span.End <= _wordEnd);
+                _wordChanges.Add(_queuedChanges.Dequeue());
+            }
+
             // Calculate the length of the word.
             var wordNewTextLength = _wordEnd - _wordStart;
             foreach (var change in _wordChanges)
@@ -746,7 +1005,7 @@ namespace FormatDocXml
 
             Debug.Assert(_breakStart <= _wordEnd);
 
-            Debug.Assert(_wordChanges.Count == 0);
+            Debug.Assert(_queuedChanges.Count == 0);
 
             // Construct the break.
             string breakNewText = BuildFinalBreakText();
