@@ -41,6 +41,25 @@ namespace FormatDocXml.Tests
         }
 
         [Fact]
+        public void TestBlockElementMissingEndTagName()
+        {
+            var inputText =
+@"public class C {
+    /// <summary>Words and words.</>
+    public void M() { }
+}";
+            var expectedText =
+@"public class C {
+    /// <summary>
+    /// Words and words.
+    /// </>
+    public void M() { }
+}";
+
+            AssertFormat(expectedText, inputText);
+        }
+
+        [Fact]
         public void TestBlockElementMissingStartTag()
         {
             var inputText =
@@ -51,6 +70,25 @@ namespace FormatDocXml.Tests
             var expectedText =
 @"public class C {
     /// Words and words.</summary>
+    public void M() { }
+}";
+
+            AssertFormat(expectedText, inputText);
+        }
+
+        [Fact]
+        public void TestBlockElementMissingStartTagName()
+        {
+            var inputText =
+@"public class C {
+    /// <>Words and words.</summary>
+    public void M() { }
+}";
+            var expectedText =
+@"public class C {
+    /// <>
+    /// Words and words.
+    /// </summary>
     public void M() { }
 }";
 
@@ -92,6 +130,23 @@ namespace FormatDocXml.Tests
         }
 
         [Fact]
+        public void TestInlineElementMissingEndTagName()
+        {
+            var inputText =
+    @"public class C {
+    /// Words and <c>words</>.
+    public void M() { }
+}";
+            var expectedText =
+    @"public class C {
+    /// Words and <c>words</>.
+    public void M() { }
+}";
+
+            AssertFormat(expectedText, inputText);
+        }
+
+        [Fact]
         public void TestInlineElementMissingStartTag()
         {
             var inputText =
@@ -102,6 +157,23 @@ namespace FormatDocXml.Tests
             var expectedText =
     @"public class C {
     /// Words and words</c>.
+    public void M() { }
+}";
+
+            AssertFormat(expectedText, inputText);
+        }
+
+        [Fact]
+        public void TestInlineElementMissingStartTagName()
+        {
+            var inputText =
+    @"public class C {
+    /// Words and <>words</c>.
+    public void M() { }
+}";
+            var expectedText =
+    @"public class C {
+    /// Words and <>words</c>.
     public void M() { }
 }";
 

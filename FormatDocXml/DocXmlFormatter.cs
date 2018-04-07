@@ -407,7 +407,7 @@ namespace FormatDocXml
 
         private void FormatXmlElement(XmlElementSyntax node)
         {
-            var name = (node.EndTag.IsMissing ? node.StartTag.Name : node.EndTag.Name).ToString();
+            var name = (!node.StartTag.Name.IsMissing ? node.StartTag.Name : node.EndTag.Name).ToString();
             ElementFormatting formatting;
             _elements.TryGetValue(name, out formatting);
 
