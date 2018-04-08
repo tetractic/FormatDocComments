@@ -81,6 +81,27 @@ namespace FormatDocXml.Tests
         }
 
         [Fact]
+        public void TestPreserveLineBreak()
+        {
+            var inputText =
+@"public class C {
+    /// <code>
+/// Words and words.
+    /// </code>
+    public void M() { }
+}";
+            var expectedText =
+@"public class C {
+    /// <code>
+    /// Words and words.
+    /// </code>
+    public void M() { }
+}";
+
+            AssertFormat(expectedText, inputText);
+        }
+
+        [Fact]
         public void TestPreserveLongLines()
         {
             var inputText =

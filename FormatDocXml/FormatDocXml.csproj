@@ -60,6 +60,7 @@
     <Compile Include="FormatDocXmlCommandSet.cs" />
     <Compile Include="DocXmlFormattingOptions.cs" />
     <Compile Include="LanguageServiceIds.cs" />
+    <Compile Include="StringBuilderExtensions.cs" />
     <Compile Include="TextEditorGuideSettings.cs" />
     <Compile Include="FormatDocXmlPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -78,19 +78,21 @@ namespace FormatDocXml
 
         private readonly List<TextChange> _wordChanges = new List<TextChange>();
 
+        private readonly StringBuilder _breakText = new StringBuilder();
+
         private readonly StringBuilder _stringBuilder = new StringBuilder();
 
         private SourceText _text;
 
         private int _column;
 
-        private int _externalIndent;
+        private int _exteriorIndent;
 
-        private string _internalLinePrefix;
+        private string _interiorLinePrefix;
 
         private int _preserve;
 
-        private int _internalIndent;
+        private int _interiorIndent;
 
         private int _breakStart;
         private int _wordStart;
@@ -195,7 +197,7 @@ namespace FormatDocXml
             return formatter._changes;
         }
 
-        private static string GetInternalLinePrefix(DocumentationCommentTriviaSyntax node)
+        private static string GetInteriorLinePrefix(DocumentationCommentTriviaSyntax node)
         {
             switch (node.Kind())
             {
@@ -318,7 +320,7 @@ namespace FormatDocXml
             }
         }
 
-        private static int GetColumnFromSourceTextWithChanges(SourceText text, TextSpan span, List<TextChange> changes, int column, int tabSize)
+        private static int GetColumnFromSourceTextWithChanges(SourceText text, TextSpan span, IEnumerable<TextChange> changes, int column, int tabSize)
         {
             int position = span.Start;
 
@@ -357,14 +359,14 @@ namespace FormatDocXml
             _text = node.SyntaxTree.GetText(cancellationToken);
 
             _column = GetInitialColumn(node.GetFirstToken(), _tabSize, cancellationToken);
-            _externalIndent = _column;
+            _exteriorIndent = _column;
 
-            _internalLinePrefix = GetInternalLinePrefix(node);
-            _internalIndent = 0;
+            _interiorLinePrefix = GetInteriorLinePrefix(node);
+            _interiorIndent = 0;
 
             _breakStart = node.FullSpan.Start;
             _wordStart = _breakStart;
-            _wordEnd = _breakStart;
+            _wordEnd = _wordStart;
             _breakMode = BreakMode.FirstBreak;
 
             FormatXmlNodes(node.Content);
@@ -374,34 +376,31 @@ namespace FormatDocXml
         private void FormatXmlNodes(SyntaxList<XmlNodeSyntax> nodes)
         {
             foreach (var node in nodes)
-                FormatXmlNode(node);
-        }
-
-        private void FormatXmlNode(XmlNodeSyntax node)
-        {
-            switch (node.Kind())
             {
-                case SyntaxKind.XmlElement:
-                    FormatXmlElement((XmlElementSyntax)node);
-                    break;
-                case SyntaxKind.XmlEmptyElement:
-                    FormatXmlEmptyElement((XmlEmptyElementSyntax)node);
-                    break;
-                case SyntaxKind.XmlText:
-                    FormatXmlText((XmlTextSyntax)node);
-                    break;
-                case SyntaxKind.XmlCDataSection:
-                    FormatXmlCDataSection((XmlCDataSectionSyntax)node);
-                    break;
-                case SyntaxKind.XmlComment:
-                    FormatXmlComment((XmlCommentSyntax)node);
-                    break;
-                case SyntaxKind.XmlProcessingInstruction:
-                    FormatXmlProcessingInstruction((XmlProcessingInstructionSyntax)node);
-                    break;
-                default:
-                    FormatUnknown(node);
-                    break;
+                switch (node.Kind())
+                {
+                    case SyntaxKind.XmlElement:
+                        FormatXmlElement((XmlElementSyntax)node);
+                        break;
+                    case SyntaxKind.XmlEmptyElement:
+                        FormatXmlEmptyElement((XmlEmptyElementSyntax)node);
+                        break;
+                    case SyntaxKind.XmlText:
+                        FormatXmlText((XmlTextSyntax)node);
+                        break;
+                    case SyntaxKind.XmlCDataSection:
+                        FormatXmlCDataSection((XmlCDataSectionSyntax)node);
+                        break;
+                    case SyntaxKind.XmlComment:
+                        FormatXmlComment((XmlCommentSyntax)node);
+                        break;
+                    case SyntaxKind.XmlProcessingInstruction:
+                        FormatXmlProcessingInstruction((XmlProcessingInstructionSyntax)node);
+                        break;
+                    default:
+                        FormatUnknown(node);
+                        break;
+                }
             }
         }
 
@@ -421,11 +420,17 @@ namespace FormatDocXml
             if (formatting.HasFlag(ElementFormatting.Block))
                 Break(BreakMode.LineBreak);
 
-            if (!node.IsMissing)
-            {
-                // TODO: Format insides of tag; queuing changes.
-                AddWord(node.Span);
-            }
+            if (node.HasLeadingTrivia)
+                AddTrivia(node.GetLeadingTrivia());
+
+            // TODO: Format insides of tag; queuing changes.
+            AddWord(node.Span);
+
+            if (formatting.HasFlag(ElementFormatting.Preserve))
+                _preserve += 1;
+
+            if (node.HasTrailingTrivia)
+                AddTrivia(node.GetTrailingTrivia());
 
             if (formatting.HasFlag(ElementFormatting.SnugStart))
                 Break(BreakMode.SuppressWordBreak);
@@ -433,10 +438,7 @@ namespace FormatDocXml
                 Break(BreakMode.LineBreak);
 
             if (formatting.HasFlag(ElementFormatting.Indent))
-                _internalIndent += _indentSize;
-
-            if (formatting.HasFlag(ElementFormatting.Preserve))
-                _preserve += 1;
+                _interiorIndent += _indentSize;
         }
 
         private void FormatXmlElementEndTag(XmlElementEndTagSyntax node, ElementFormatting formatting)
@@ -447,25 +449,25 @@ namespace FormatDocXml
                 Break(BreakMode.LineBreak);
 
             if (formatting.HasFlag(ElementFormatting.Indent) && !formatting.HasFlag(ElementFormatting.SnugEnd))
-                _internalIndent -= _indentSize;
+                _interiorIndent -= _indentSize;
 
-            if (!node.IsMissing)
-            {
-                // TODO: Format insides of tag; queuing changes.
-                AddWord(node.Span);
-            }
+            if (node.HasLeadingTrivia)
+                AddTrivia(node.GetLeadingTrivia());
 
             if (formatting.HasFlag(ElementFormatting.Preserve))
-            {
-                _breakMode |= BreakMode.Preserve;
                 _preserve -= 1;
-            }
+
+            // TODO: Format insides of tag; queuing changes.
+            AddWord(node.Span);
+
+            if (node.HasTrailingTrivia)
+                AddTrivia(node.GetTrailingTrivia());
 
             if (formatting.HasFlag(ElementFormatting.Block))
                 Break(BreakMode.LineBreak);
 
             if (formatting.HasFlag(ElementFormatting.Indent) && formatting.HasFlag(ElementFormatting.SnugEnd))
-                _internalIndent -= _indentSize;
+                _interiorIndent -= _indentSize;
         }
 
         private void FormatXmlEmptyElement(XmlEmptyElementSyntax node)
@@ -477,11 +479,8 @@ namespace FormatDocXml
             if (formatting.HasFlag(ElementFormatting.Block))
                 Break(BreakMode.LineBreak);
 
-            if (!node.IsMissing)
-            {
-                // TODO: Format insides of tag; queuing changes.
-                AddWord(node.Span);
-            }
+            // TODO: Format insides of tag; queuing changes.
+            AddWordAndTrivia(node);
 
             if (formatting.HasFlag(ElementFormatting.Block))
                 Break(BreakMode.LineBreak);
@@ -494,94 +493,159 @@ namespace FormatDocXml
 
         private void FormatXmlCDataSection(XmlCDataSectionSyntax node)
         {
-            AddWord(node.StartCDataToken.Span);
+            AddWordAndTrivia(node.StartCDataToken);
 
             FormatTextTokens(node.TextTokens);
 
-            AddWord(node.EndCDataToken.Span);
+            AddWordAndTrivia(node.EndCDataToken);
         }
 
         private void FormatXmlComment(XmlCommentSyntax node)
         {
-            AddWord(node.LessThanExclamationMinusMinusToken.Span);
+            AddWordAndTrivia(node.LessThanExclamationMinusMinusToken);
 
             FormatTextTokens(node.TextTokens);
 
-            AddWord(node.MinusMinusGreaterThanToken.Span);
+            AddWordAndTrivia(node.MinusMinusGreaterThanToken);
         }
 
         private void FormatXmlProcessingInstruction(XmlProcessingInstructionSyntax node)
         {
             Break(BreakMode.LineBreak);
 
-            AddWord(node.Span);
+            AddWordAndTrivia(node);
 
             Break(BreakMode.LineBreak);
         }
 
         private void FormatUnknown(XmlNodeSyntax node)
         {
-            AddWord(node.Span);
+            Debug.Assert(false);
+
+            AddWordAndTrivia(node);
         }
 
         private void FormatTextTokens(SyntaxTokenList textTokens)
         {
             foreach (var token in textTokens)
             {
-                if (token.Kind() == SyntaxKind.XmlTextLiteralNewLineToken)
-                    continue;
+                if (token.HasLeadingTrivia)
+                    AddTrivia(token.LeadingTrivia);
 
                 var tokenText = token.Text;
 
                 int wordStart = 0;
-                var sentenceSpace = false;
+                int breakStart = 0;
+                var allowSentenceSpace = false;
 
                 for (int i = 0; i < tokenText.Length; ++i)
                 {
-                    if (IsWhitespace(tokenText[i]))
-                    {
-                        // Preserve one extra space after sentence end.
-                        if (sentenceSpace && (i + 1 < tokenText.Length ? IsWhitespace(tokenText[i + 1]) : token.GetNextToken().Kind() == SyntaxKind.XmlTextLiteralNewLineToken))
-                        {
-                            sentenceSpace = false;
-                            continue;
-                        }
+                    char c = tokenText[i];
 
+                    var isSpace = IsWhitespace(c) || c == '\r' || c == '\n';
+
+                    // Preserve one extra space after sentence end.
+                    if (isSpace && allowSentenceSpace)
+                    {
+                        char nextC = i + 1 < tokenText.Length
+                            ? tokenText[i + 1]
+                            : token.Span.End < _text.Length
+                                ? _text[token.Span.End]
+                                : ' ';
+
+                        if (IsWhitespace(nextC) || nextC == '\r' || nextC == '\n')
+                        {
+                            isSpace = false;
+                            allowSentenceSpace = false;
+                        }
+                    }
+
+                    if (isSpace)
+                    {
                         if (wordStart < i)
                             AddWord(new TextSpan(token.SpanStart + wordStart, i - wordStart));
 
                         wordStart = i + 1;
-                        sentenceSpace = false;
+                        allowSentenceSpace = false;
                     }
-                    else if ("!.:?".IndexOf(tokenText[i]) >= 0)
+                    else
                     {
-                        sentenceSpace = true;
-                    }
-                    else if (char.IsLetterOrDigit(tokenText[i]))
-                    {
-                        sentenceSpace = false;
+                        if (breakStart < i)
+                            AddBreak(new TextSpan(token.SpanStart + breakStart, i - breakStart));
+
+                        breakStart = i + 1;
+                        if ("!.:?".IndexOf(c) >= 0)
+                        {
+                            allowSentenceSpace = true;
+                        }
+                        else if (char.IsLetterOrDigit(c))
+                        {
+                            allowSentenceSpace = false;
+                        }
                     }
                 }
 
                 if (wordStart < tokenText.Length)
                     AddWord(new TextSpan(token.SpanStart + wordStart, tokenText.Length - wordStart));
+                if (breakStart < tokenText.Length)
+                    AddBreak(new TextSpan(token.SpanStart + breakStart, tokenText.Length - breakStart));
+
+                if (token.HasTrailingTrivia)
+                    AddTrivia(token.TrailingTrivia);
             }
+        }
+
+        private void AddTrivia(SyntaxTriviaList trivia)
+        {
+            foreach (var trivium in trivia)
+            {
+                switch (trivium.Kind())
+                {
+                    case SyntaxKind.DocumentationCommentExteriorTrivia:
+                        break;
+                    case SyntaxKind.EndOfLineTrivia:
+                    case SyntaxKind.WhitespaceTrivia:
+                        AddBreakAndTrivia(trivium.Token);
+                        break;
+                    default:
+                        Debug.Assert(false);
+                        break;
+                }
+            }
+        }
+
+        private void AddWordAndTrivia(SyntaxToken token)
+        {
+            if (token.HasLeadingTrivia)
+                AddTrivia(token.LeadingTrivia);
+
+            AddWord(token.Span);
+
+            if (token.HasTrailingTrivia)
+                AddTrivia(token.TrailingTrivia);
+        }
+
+        private void AddWordAndTrivia(CSharpSyntaxNode node)
+        {
+            if (node.HasLeadingTrivia)
+                AddTrivia(node.GetLeadingTrivia());
+
+            AddWord(node.Span);
+
+            if (node.HasTrailingTrivia)
+                AddTrivia(node.GetTrailingTrivia());
         }
 
         private void AddWord(TextSpan span)
         {
             Debug.Assert(span.Start >= _wordEnd);
 
-            Debug.Assert(_breakStart <= _wordEnd);
+            Debug.Assert(_breakStart <= _wordStart);
             Debug.Assert(_wordStart <= _wordEnd);
 
-            if (span.Length == 0)
-                return;
-
-            if (_breakStart == _wordEnd || span.Start > _wordEnd)
+            if (_wordStart == _wordEnd)
             {
-                // This word span is separated from the existing word.
-                Break();
+                // There is no existing word.
                 _wordStart = span.Start;
                 _wordEnd = span.End;
             }
@@ -592,17 +656,52 @@ namespace FormatDocXml
             }
         }
 
+        private void AddBreakAndTrivia(SyntaxToken token)
+        {
+            if (token.HasLeadingTrivia)
+                AddTrivia(token.LeadingTrivia);
+
+            AddBreak(token.Span, token.ToString());
+
+            if (token.HasTrailingTrivia)
+                AddTrivia(token.TrailingTrivia);
+        }
+
+        private void AddBreak(TextSpan span, string text = null)
+        {
+            Debug.Assert(span.Start >= _wordEnd);
+
+            Debug.Assert(_breakStart <= _wordStart);
+            Debug.Assert(_wordStart <= _wordEnd);
+
+            if (span.Length == 0)
+                return;
+
+            if (_wordStart != _wordEnd)
+                Break();
+
+            _wordStart = span.End;
+            _wordEnd = _wordStart;
+
+            Debug.Assert(text == null || text == GetText(span));
+
+            _breakText.Append(text ?? GetText(span));
+        }
+
         private void Break(BreakMode nextBreakMode = BreakMode.None)
         {
-            if (_breakStart == _wordEnd)
+            Debug.Assert(_breakStart <= _wordStart);
+            Debug.Assert(_wordStart <= _wordEnd);
+
+            if (_preserve > 0)
+                nextBreakMode |= BreakMode.Preserve;
+
+            // Defer break if there has been no word since the last break.
+            if (_wordStart == _wordEnd)
             {
-                // No word since the last break.
                 _breakMode |= nextBreakMode;
                 return;
             }
-
-            if (_preserve > 0)
-                _breakMode |= BreakMode.Preserve;
 
             Debug.Assert(_breakStart <= _wordStart);
             Debug.Assert(_wordStart <= _wordEnd);
@@ -612,29 +711,17 @@ namespace FormatDocXml
             foreach (var change in _wordChanges)
                 wordNewTextLength += change.NewText.Length - change.Span.Length;
 
-            if (_breakMode.HasFlag(BreakMode.Preserve))
-            {
-                // Keep the old break.
-                var breakSpan = TextSpan.FromBounds(_breakStart, _wordStart);
-                var breakText = GetText(breakSpan);
+            // Construct the break.
+            string breakNewText = BuildBreakText(wordNewTextLength);
 
-                // Recompute column after the break.
-                _column = GetColumnFromText(breakText, _column, _tabSize);
-            }
-            else
-            {
-                // Construct the break.
-                string breakNewText = BuildBreakText(wordNewTextLength);
+            // Recompute column after the break.
+            _column = GetColumnFromText(breakNewText, _column, _tabSize);
 
-                // Recompute column after the break.
-                _column = GetColumnFromText(breakNewText, _column, _tabSize);
-
-                // Add the break change.
-                var breakSpan = TextSpan.FromBounds(_breakStart, _wordStart);
-                var breakText = GetText(breakSpan);
-                if (breakNewText != breakText)
-                    _changes.Add(new TextChange(breakSpan, breakNewText));
-            }
+            // Add the break change.
+            var breakSpan = TextSpan.FromBounds(_breakStart, _wordStart);
+            var breakText = GetText(breakSpan);
+            if (breakNewText != breakText)
+                _changes.Add(new TextChange(breakSpan, breakNewText));
 
             // Recompute column after the word.
             _column = GetColumnFromSourceTextWithChanges(_text, TextSpan.FromBounds(_wordStart, _wordEnd), _wordChanges, _column, _tabSize);
@@ -644,7 +731,9 @@ namespace FormatDocXml
             _wordChanges.Clear();
 
             // Prepare for next word.
+            _breakText.Clear();
             _breakStart = _wordEnd;
+            _wordStart = _breakStart;
             _breakMode = nextBreakMode;
         }
 
@@ -652,7 +741,7 @@ namespace FormatDocXml
         {
             Break();
 
-            _wordStart = endOfComment.FullSpan.End;
+            _wordStart = endOfComment.Span.End;
             _wordEnd = _wordStart;
 
             Debug.Assert(_breakStart <= _wordEnd);
@@ -681,9 +770,32 @@ namespace FormatDocXml
                 breakNewText = _stringBuilder
                     .Clear()
                     .Append("///")
-                    .Append(_internalLinePrefix)
-                    .Append(' ', _internalIndent)
+                    .Append(_interiorLinePrefix)
+                    .Append(' ', _interiorIndent)
                     .ToString();
+            }
+            else if (_breakMode.HasFlag(BreakMode.Preserve))
+            {
+                _stringBuilder.Clear();
+                for (int i = 0; i < _breakText.Length; ++i)
+                {
+                    char c = _breakText[i];
+                    switch (c)
+                    {
+                        case '\r':
+                            break;
+                        case '\n':
+                            _stringBuilder
+                                .Append(_newLine)
+                                .AppendIndent(_exteriorIndent, _useTabs, _tabSize)
+                                .Append("///");
+                            break;
+                        default:
+                            _stringBuilder.Append(c);
+                            break;
+                    }
+                }
+                breakNewText = _stringBuilder.ToString();
             }
             else
             {
@@ -695,20 +807,13 @@ namespace FormatDocXml
                 if (_column + breakNewText.Length + wordNewTextLength > _wrapColumn ||
                     _breakMode.HasFlag(BreakMode.LineBreak))
                 {
-                    _stringBuilder
-                        .Clear()
-                        .Append(_newLine);
-                    if (_useTabs)
-                        _stringBuilder
-                            .Append('\t', _externalIndent / _tabSize)
-                            .Append(' ', _externalIndent % _tabSize);
-                    else
-                        _stringBuilder
-                            .Append(' ', _externalIndent);
                     breakNewText = _stringBuilder
+                        .Clear()
+                        .Append(_newLine)
+                        .AppendIndent(_exteriorIndent, _useTabs, _tabSize)
                         .Append("///")
-                        .Append(_internalLinePrefix)
-                        .Append(' ', _internalIndent)
+                        .Append(_interiorLinePrefix)
+                        .Append(' ', _interiorIndent)
                         .ToString();
                 }
             }
@@ -725,7 +830,7 @@ namespace FormatDocXml
                 breakNewText = _stringBuilder
                     .Clear()
                     .Append("///")
-                    .Append(_internalLinePrefix)
+                    .Append(_interiorLinePrefix)
                     .Append(_newLine)
                     .ToString();
             }
