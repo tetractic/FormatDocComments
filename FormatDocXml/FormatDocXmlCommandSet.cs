@@ -15,6 +15,7 @@
 // if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 // 02110-1301, USA.
 //
+using Microsoft;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
@@ -62,33 +63,36 @@ namespace FormatDocXml
 
             _package = package;
 
-            if (ServiceProvider.GetService(typeof(IMenuCommandService)) is OleMenuCommandService commandService)
+            var menuCommandService = (IMenuCommandService)ServiceProvider.GetService(typeof(IMenuCommandService));
+            Assumes.Present(menuCommandService);
+
             {
-                {
-                    var formatDocXmlInSelectionCommandId = new CommandID(CommandSet, FormatDocXmlInSelectionCommandId);
-                    var formatDocXmlInSelectionCommand = new OleMenuCommand(
-                        invokeHandler: FormatDocXmlInSelectionCommandExecute,
-                        changeHandler: null,
-                        beforeQueryStatus: FormatDocXmlCommandQueryStatus,
-                        id: formatDocXmlInSelectionCommandId);
-                    commandService.AddCommand(formatDocXmlInSelectionCommand);
-                }
-                {
-                    var formatDocXmlInDocumentCommandId = new CommandID(CommandSet, FormatDocXmlInDocumentCommandId);
-                    var formatDocXmlInDocumentCommand = new OleMenuCommand(
-                        invokeHandler: FormatDocXmlInDocumentCommandExecute,
-                        changeHandler: null,
-                        beforeQueryStatus: FormatDocXmlCommandQueryStatus,
-                        id: formatDocXmlInDocumentCommandId);
-                    commandService.AddCommand(formatDocXmlInDocumentCommand);
-                }
+                var formatDocXmlInSelectionCommandId = new CommandID(CommandSet, FormatDocXmlInSelectionCommandId);
+                var formatDocXmlInSelectionCommand = new OleMenuCommand(
+                    invokeHandler: FormatDocXmlInSelectionCommandExecute,
+                    changeHandler: null,
+                    beforeQueryStatus: FormatDocXmlCommandQueryStatus,
+                    id: formatDocXmlInSelectionCommandId);
+                menuCommandService.AddCommand(formatDocXmlInSelectionCommand);
+            }
+            {
+                var formatDocXmlInDocumentCommandId = new CommandID(CommandSet, FormatDocXmlInDocumentCommandId);
+                var formatDocXmlInDocumentCommand = new OleMenuCommand(
+                    invokeHandler: FormatDocXmlInDocumentCommandExecute,
+                    changeHandler: null,
+                    beforeQueryStatus: FormatDocXmlCommandQueryStatus,
+                    id: formatDocXmlInDocumentCommandId);
+                menuCommandService.AddCommand(formatDocXmlInDocumentCommand);
             }
 
-            var componentModel = (IComponentModel)ServiceProvider.GetService(typeof(SComponentModel));
-
             _textManager = (IVsTextManager)ServiceProvider.GetService(typeof(SVsTextManager));
+            Assumes.Present(_textManager);
+
+            var componentModel = (IComponentModel)ServiceProvider.GetService(typeof(SComponentModel));
+            Assumes.Present(componentModel);
 
             _vsEditorAdaptersFactory = componentModel.GetService<IVsEditorAdaptersFactoryService>();
+            Assumes.Present(_vsEditorAdaptersFactory);
         }
 
         private void FormatDocXmlCommandQueryStatus(object sender, EventArgs e)
