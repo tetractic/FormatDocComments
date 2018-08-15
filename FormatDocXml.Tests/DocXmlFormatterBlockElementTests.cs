@@ -192,5 +192,27 @@ namespace FormatDocXml.Tests
             AssertFormat(expectedText, inputText, (config) => config
                 .WithChangedOption(DocXmlFormattingOptions.WrapColumn, 40));
         }
+
+        [Fact]
+        public void TestSnugBlockElementUnindentsAfterInnerBlock()
+        {
+            var inputText =
+@"public class C {
+    /// <param name=""x""><para>Words.</para></param>
+    public void M(int x) { }
+}";
+            var expectedText =
+@"public class C {
+    /// <param name=""x"">
+    ///     <para>
+    ///     Words.
+    ///     </para>
+    /// </param>
+    public void M(int x) { }
+}";
+
+            AssertFormat(expectedText, inputText, (config) => config
+                .WithChangedOption(DocXmlFormattingOptions.WrapColumn, 40));
+        }
     }
 }

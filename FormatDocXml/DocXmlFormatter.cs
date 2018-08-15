@@ -449,7 +449,15 @@ namespace FormatDocXml
             else if (formatting.HasFlag(ElementFormatting.Block))
                 Break(BreakMode.LineBreak);
 
-            if (formatting.HasFlag(ElementFormatting.Indent) && !formatting.HasFlag(ElementFormatting.SnugEnd))
+            // A snug-end element normally causes unindentation to happen after the end tag, but
+            // there is a special case for when the content of a snug block element forced a line
+            // break before the end tag (presumably because the content was a block element).
+            // This makes a snug block element that contains a block element behave like a block
+            // element.
+            bool unsnug = formatting.HasFlag(ElementFormatting.Block | ElementFormatting.Snug) && _breakMode.HasFlag(BreakMode.LineBreak);
+            bool unindentAfterTag = formatting.HasFlag(ElementFormatting.SnugEnd) && !unsnug;
+
+            if (formatting.HasFlag(ElementFormatting.Indent) && !unindentAfterTag)
                 _interiorIndent -= _indentSize;
 
             if (node.HasLeadingTrivia)
@@ -466,7 +474,7 @@ namespace FormatDocXml
             if (formatting.HasFlag(ElementFormatting.Block))
                 Break(BreakMode.LineBreak);
 
-            if (formatting.HasFlag(ElementFormatting.Indent) && formatting.HasFlag(ElementFormatting.SnugEnd))
+            if (formatting.HasFlag(ElementFormatting.Indent) && unindentAfterTag)
                 _interiorIndent -= _indentSize;
         }
 
@@ -1124,17 +1132,20 @@ namespace FormatDocXml
             Block = 1,
 
             /// <summary>
-            /// Any break after the start tag of the element is suppressed.
+            /// Suppresses any word break and any self-induced line break after the start tag of the
+            /// element.
             /// </summary>
             SnugStart = 2,
 
             /// <summary>
-            /// Any break before the end tag of the element is suppressed.
+            /// Suppresses any word break and any self-induced line break before the end tag of the
+            /// element.
             /// </summary>
             SnugEnd = 4,
 
             /// <summary>
-            /// Any break after the start tag or before the end tag of the element is suppressed.
+            /// Suppresses any word breaks and any self-induced line breaks after the start tag and
+            /// before the end tag of the element.
             /// </summary>
             Snug = 6,
 
