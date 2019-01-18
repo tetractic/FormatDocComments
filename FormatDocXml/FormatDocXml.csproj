@@ -50,15 +50,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ColumnHelpers.cs" />
+    <Compile Include="Commands\FormatDocXmlInDocumentCommand.cs" />
+    <Compile Include="Commands\FormatDocXmlInSelectionCommandArgs.cs" />
+    <Compile Include="Commands\FormatDocXmlInDocumentCommandArgs.cs" />
+    <Compile Include="Commands\FormatDocXmlInSelectionCommand.cs" />
     <Compile Include="DocumentExtensions.cs" />
     <Compile Include="DocXmlFormatter.cs" />
-    <Compile Include="FormatDocXmlCommandSet.cs" />
     <Compile Include="DocXmlFormattingOptions.cs" />
-    <Compile Include="LanguageServiceIds.cs" />
-    <Compile Include="StringBuilderExtensions.cs" />
-    <Compile Include="TextEditorGuideSettings.cs" />
     <Compile Include="FormatDocXmlPackage.cs" />
+    <Compile Include="IEnumerableExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PackageIds.cs" />
+    <Compile Include="StringBuilderExtensions.cs" />
+    <Compile Include="TextEditorGuidesSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source.extension.vsixmanifest">
@@ -89,7 +93,7 @@
     <Reference Include="System.ComponentModel.Composition" />
   </ItemGroup>
   <ItemGroup>
-    <VSCTCompile Include="FormatDocXmlPackage.vsct">
+    <VSCTCompile Include="VSCommandTable.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
       <SubType>Designer</SubType>
     </VSCTCompile>
@@ -122,11 +126,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.ComponentModelHost">
-      <Version>15.0.26201</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Editor">
-      <Version>15.0.26201</Version>
+      <Version>15.6.27740</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.OLE.Interop">
       <Version>7.10.6071</Version>
@@ -141,7 +142,10 @@
       <Version>15.0.26201</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.12.0">
-      <Version>12.0.30110</Version>
+      <Version>12.0.30111</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.14.0.DesignTime">
+      <Version>14.3.25407</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers">
       <Version>15.6.56</Version>

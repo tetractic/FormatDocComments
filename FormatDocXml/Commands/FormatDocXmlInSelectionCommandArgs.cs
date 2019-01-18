@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (C) 2018-2019  Carl Reinke
+// Copyright (C) 2019  Carl Reinke
 //
 // This file is part of FormatDocXML.
 //
@@ -15,18 +15,17 @@
 // if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 // 02110-1301, USA.
 //
-using Microsoft.VisualStudio.Shell;
-using System;
-using System.Runtime.InteropServices;
+using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Text.Editor.Commanding;
 
-namespace FormatDocXml
+namespace FormatDocXml.Commands
 {
-    [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
-    [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
-    [ProvideMenuResource("Menus.ctmenu", 1)]
-    [Guid(PackageIds.PackageGuidString)]
-    [ProvideBindingPath]
-    internal sealed class FormatDocXmlPackage : AsyncPackage
+    internal sealed class FormatDocXmlInSelectionCommandArgs : EditorCommandArgs
     {
+        public FormatDocXmlInSelectionCommandArgs(ITextView textView, ITextBuffer textBuffer)
+            : base(textView, textBuffer)
+        {
+        }
     }
 }

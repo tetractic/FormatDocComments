@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (C) 2018  Carl Reinke
+// Copyright (C) 2019  Carl Reinke
 //
 // This file is part of FormatDocXML.
 //
@@ -15,18 +15,22 @@
 // if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 // 02110-1301, USA.
 //
-using System;
+using System.Collections.Generic;
 
 namespace FormatDocXml
 {
-    /// <summary>
-    /// Provides language service IDs.
-    /// </summary>
-    internal static class LanguageServiceIds
+    internal static class IEnumerableExtensions
     {
-        /// <summary>
-        /// The C# language service ID.
-        /// </summary>
-        public static readonly Guid CSharp = new Guid("694DD9B6-B865-4C5B-AD85-86356E9C88DC");
+        public static int? Max(this IEnumerable<int> enumerable)
+        {
+            var enumerator = enumerable.GetEnumerator();
+            if (!enumerator.MoveNext())
+                return null;
+            int max = enumerator.Current;
+            while (enumerator.MoveNext())
+                if (max < enumerator.Current)
+                    max = enumerator.Current;
+            return max;
+        }
     }
 }

@@ -20,6 +20,7 @@ using Microsoft.CodeAnalysis.Text;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace FormatDocXml
 {
@@ -39,14 +40,14 @@ namespace FormatDocXml
         ///     <see langword="null"/>.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="textChanges"/> is
         ///     <see langword="null"/>.</exception>
-        public static Document ApplyTextChanges(this Document document, IEnumerable<TextChange> textChanges, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<Document> ApplyTextChangesAsync(this Document document, IEnumerable<TextChange> textChanges, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (document == null)
                 throw new ArgumentNullException(nameof(document));
             if (textChanges == null)
                 throw new ArgumentNullException(nameof(textChanges));
 
-            var text = document.GetTextAsync(cancellationToken).Result;
+            var text = await document.GetTextAsync(cancellationToken).ConfigureAwait(false);
             var newText = text.WithChanges(textChanges);
 
             var newDocument = document.WithText(newText);
