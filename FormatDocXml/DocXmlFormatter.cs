@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using static FormatDocXml.ColumnHelpers;
 
 namespace FormatDocXml
@@ -126,7 +127,7 @@ namespace FormatDocXml
         /// <returns>The changes that will format the XML documentation comments.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="document"/> is
         ///     <see langword="null"/>.</exception>
-        public static IList<TextChange> Format(Document document, OptionSet options = null, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<IList<TextChange>> FormatAsync(Document document, OptionSet options = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (document == null)
                 throw new ArgumentNullException(nameof(document));
@@ -136,7 +137,7 @@ namespace FormatDocXml
 
             var formatter = new DocXmlFormatter(options);
 
-            var rootNode = document.GetSyntaxRootAsync(cancellationToken).Result;
+            var rootNode = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
 
             foreach (var node in DocXmlFinder.FindNodes(rootNode))
                 formatter.Format(node, cancellationToken);
@@ -158,7 +159,7 @@ namespace FormatDocXml
         /// <returns>The changes that will format the XML documentation comments.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="document"/> is
         ///     <see langword="null"/>.</exception>
-        public static IList<TextChange> Format(Document document, TextSpan span, OptionSet options = null, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<IList<TextChange>> FormatAsync(Document document, TextSpan span, OptionSet options = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (document == null)
                 throw new ArgumentNullException(nameof(document));
@@ -168,7 +169,7 @@ namespace FormatDocXml
 
             var formatter = new DocXmlFormatter(options);
 
-            var rootNode = document.GetSyntaxRootAsync(cancellationToken).Result;
+            var rootNode = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
 
             foreach (var node in DocXmlFinder.FindNodes(rootNode, span))
                 formatter.Format(node, cancellationToken);

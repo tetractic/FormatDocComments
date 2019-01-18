@@ -95,7 +95,7 @@ public class C { }";
             var options = document.Project.Solution.Workspace.Options;
             if (updateOptions != null)
                 options = updateOptions(options);
-            var changes = DocXmlFormatter.Format(document, options);
+            var changes = DocXmlFormatter.FormatAsync(document, options).Result;
             var newSourceText = sourceText.WithChanges(changes);
             var outputText = newSourceText.ToString();
 
@@ -112,7 +112,7 @@ public class C { }";
             var options = document.Project.Solution.Workspace.Options;
             if (updateOptions != null)
                 options = updateOptions(options);
-            var changes = DocXmlFormatter.Format(document, span, options);
+            var changes = DocXmlFormatter.FormatAsync(document, span, options).Result;
             var newSourceText = sourceText.WithChanges(changes);
             var outputText = newSourceText.ToString();
 
