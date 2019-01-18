@@ -95,7 +95,9 @@ public class C { }";
             var options = document.Project.Solution.Workspace.Options;
             if (updateOptions != null)
                 options = updateOptions(options);
+#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
             var changes = DocXmlFormatter.FormatAsync(document, options).Result;
+#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
             var newSourceText = sourceText.WithChanges(changes);
             var outputText = newSourceText.ToString();
 
@@ -112,7 +114,9 @@ public class C { }";
             var options = document.Project.Solution.Workspace.Options;
             if (updateOptions != null)
                 options = updateOptions(options);
+#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
             var changes = DocXmlFormatter.FormatAsync(document, span, options).Result;
+#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
             var newSourceText = sourceText.WithChanges(changes);
             var outputText = newSourceText.ToString();
 

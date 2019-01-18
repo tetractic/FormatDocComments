@@ -26,7 +26,9 @@ namespace FormatDocXml
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(PackageIds.PackageGuidString)]
     [ProvideBindingPath]
+#pragma warning disable CA1812 // Avoid uninstantiated internal classes
     internal sealed class FormatDocXmlPackage : AsyncPackage
+#pragma warning restore CA1812 // Avoid uninstantiated internal classes
     {
     }
 }

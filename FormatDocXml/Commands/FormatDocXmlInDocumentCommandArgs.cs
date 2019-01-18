@@ -21,7 +21,9 @@ using Microsoft.VisualStudio.Text.Editor.Commanding;
 
 namespace FormatDocXml.Commands
 {
+#pragma warning disable CA1812 // Avoid uninstantiated internal classes
     internal sealed class FormatDocXmlInDocumentCommandArgs : EditorCommandArgs
+#pragma warning restore CA1812 // Avoid uninstantiated internal classes
     {
         public FormatDocXmlInDocumentCommandArgs(ITextView textView, ITextBuffer textBuffer)
             : base(textView, textBuffer)
