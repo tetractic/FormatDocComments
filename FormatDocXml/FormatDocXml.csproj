@@ -112,7 +112,6 @@
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Resources\FormatDocXmlCommands.png" />
-    <Content Include="Resources\FormatDocXmlPackage.ico" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp">
