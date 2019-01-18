@@ -22,7 +22,7 @@ using System.Runtime.InteropServices;
 namespace FormatDocXml
 {
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
-    [InstalledProductRegistration("#110", "#112", "1.1")]
+    [InstalledProductRegistration("#110", "#112", "1.2")]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(PackageIds.PackageGuidString)]
     [ProvideBindingPath]
