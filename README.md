@@ -2,6 +2,8 @@
 A Visual Studio extension that formats and word wraps C# XML documentation
 comments.
 
+[![Build status](https://ci.appveyor.com/api/projects/status/9hliayxngvh0r7po/branch/default?svg=true)](https://ci.appveyor.com/project/carlreinke/formatdocxml/branch/default)
+
 ## Getting Started
 
 Install the extension from the [Visual Studio Marketplace].

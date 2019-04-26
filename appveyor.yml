@@ -1,0 +1,13 @@
+version: '{build}'
+image: Visual Studio 2017
+configuration:
+- Debug
+- Release
+platform: Any CPU
+before_build:
+- pwsh: nuget restore
+build:
+  parallel: true
+  verbosity: minimal
+artifacts:
+- path: FormatDocXml\bin\%configuration%\FormatDocXml.vsix
