@@ -2,7 +2,7 @@
 A Visual Studio extension that formats and word wraps C# XML documentation
 comments.
 
-[![Build status](https://ci.appveyor.com/api/projects/status/9hliayxngvh0r7po/branch/default?svg=true)](https://ci.appveyor.com/project/carlreinke/formatdocxml/branch/default)
+[![Build status](https://ci.appveyor.com/api/projects/status/tj19gcp3on1426wc/branch/master?svg=true)](https://ci.appveyor.com/project/carlreinke/formatdocxml/branch/master)
 
 ## Getting Started
 
@@ -10,7 +10,7 @@ Install the extension from the [Visual Studio Marketplace].
 
 ![Menu screenshot](images/menu-screenshot.png)
 
-The extension adds two new commands to the *Edit* › *Advanced* menu:
+The extension adds two new commands to the *Edit* â€º *Advanced* menu:
 * *Format Doc Comments in Selection* formats the XML documentation comments that
   overlap the selection.  If nothing is selected then it formats the comment
   under the caret.
