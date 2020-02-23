@@ -15,10 +15,10 @@
 // if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 // 02110-1301, USA.
 //
+using System;
+
 namespace FormatDocXml
 {
-    using System;
-
     internal static class PackageIds
     {
         public const string PackageGuidString = "8288a158-430f-4bc7-9502-0716acc4f964";

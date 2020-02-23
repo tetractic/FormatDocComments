@@ -40,7 +40,7 @@ namespace FormatDocXml
         ///     <see langword="null"/>.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="textChanges"/> is
         ///     <see langword="null"/>.</exception>
-        public static async Task<Document> ApplyTextChangesAsync(this Document document, IEnumerable<TextChange> textChanges, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<Document> ApplyTextChangesAsync(this Document document, IEnumerable<TextChange> textChanges, CancellationToken cancellationToken = default)
         {
             if (document == null)
                 throw new ArgumentNullException(nameof(document));

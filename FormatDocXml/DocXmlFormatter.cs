@@ -127,7 +127,7 @@ namespace FormatDocXml
         /// <returns>The changes that will format the XML documentation comments.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="document"/> is
         ///     <see langword="null"/>.</exception>
-        public static async Task<IList<TextChange>> FormatAsync(Document document, OptionSet options = null, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<IList<TextChange>> FormatAsync(Document document, OptionSet options = null, CancellationToken cancellationToken = default)
         {
             if (document == null)
                 throw new ArgumentNullException(nameof(document));
@@ -159,7 +159,7 @@ namespace FormatDocXml
         /// <returns>The changes that will format the XML documentation comments.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="document"/> is
         ///     <see langword="null"/>.</exception>
-        public static async Task<IList<TextChange>> FormatAsync(Document document, TextSpan span, OptionSet options = null, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<IList<TextChange>> FormatAsync(Document document, TextSpan span, OptionSet options = null, CancellationToken cancellationToken = default)
         {
             if (document == null)
                 throw new ArgumentNullException(nameof(document));
@@ -188,7 +188,7 @@ namespace FormatDocXml
         ///     <see langword="null"/>.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="options"/> is
         ///     <see langword="null"/>.</exception>
-        public static IList<TextChange> Format(DocumentationCommentTriviaSyntax node, OptionSet options, CancellationToken cancellationToken = default(CancellationToken))
+        public static IList<TextChange> Format(DocumentationCommentTriviaSyntax node, OptionSet options, CancellationToken cancellationToken = default)
         {
             if (node == null)
                 throw new ArgumentNullException(nameof(node));
@@ -289,7 +289,7 @@ namespace FormatDocXml
                 if (!TryGetLiteralText(token, out text) ||
                     text.Length < 1)
                 {
-                    c = default(char);
+                    c = default;
                     return false;
                 }
 
@@ -301,7 +301,7 @@ namespace FormatDocXml
             {
                 if (token.Kind() != SyntaxKind.XmlTextLiteralToken)
                 {
-                    text = default(string);
+                    text = default;
                     return false;
                 }
 
@@ -333,7 +333,7 @@ namespace FormatDocXml
                 Debug.Assert(change.Span.End <= span.End);
                 Debug.Assert(change.NewText != null);
 
-                var newTextLength = change.NewText.Length;
+                int newTextLength = change.NewText.Length;
 
                 if (change.Span.Length == 0 && newTextLength == 0)
                     continue;
@@ -353,7 +353,7 @@ namespace FormatDocXml
             return column;
         }
 
-        private void Format(DocumentationCommentTriviaSyntax node, CancellationToken cancellationToken = default(CancellationToken))
+        private void Format(DocumentationCommentTriviaSyntax node, CancellationToken cancellationToken = default)
         {
             // Only single line comments are supported.
             if (node.Kind() != SyntaxKind.SingleLineDocumentationCommentTrivia)
@@ -409,9 +409,9 @@ namespace FormatDocXml
 
         private void FormatXmlElement(XmlElementSyntax node)
         {
-            var name = (!node.StartTag.Name.IsMissing ? node.StartTag.Name : node.EndTag.Name).ToString();
+            string name = (!node.StartTag.Name.IsMissing ? node.StartTag.Name : node.EndTag.Name).ToString();
             ElementFormatting formatting;
-            _elements.TryGetValue(name, out formatting);
+            _ = _elements.TryGetValue(name, out formatting);
 
             FormatXmlElementStartTag(node.StartTag, formatting);
             FormatXmlNodes(node.Content);
@@ -481,9 +481,9 @@ namespace FormatDocXml
 
         private void FormatXmlEmptyElement(XmlEmptyElementSyntax node)
         {
-            var name = node.Name.ToString();
+            string name = node.Name.ToString();
             ElementFormatting formatting;
-            _elements.TryGetValue(name, out formatting);
+            _ = _elements.TryGetValue(name, out formatting);
 
             if (formatting.HasFlag(ElementFormatting.Block))
                 Break(BreakMode.LineBreak);
@@ -546,17 +546,17 @@ namespace FormatDocXml
                 if (token.HasLeadingTrivia)
                     AddTrivia(token.LeadingTrivia);
 
-                var tokenText = token.Text;
+                string tokenText = token.Text;
 
                 int wordStart = 0;
                 int breakStart = 0;
-                var allowSentenceSpace = false;
+                bool allowSentenceSpace = false;
 
                 for (int i = 0; i < tokenText.Length; ++i)
                 {
                     char c = tokenText[i];
 
-                    var isSpace = IsWhitespace(c) || c == '\r' || c == '\n';
+                    bool isSpace = IsWhitespace(c) || c == '\r' || c == '\n';
 
                     // Preserve one extra space after sentence end.
                     if (isSpace && allowSentenceSpace)
@@ -847,7 +847,7 @@ namespace FormatDocXml
 
         private void EnqueueChange(TextSpan span, string newText)
         {
-            var text = GetText(span);
+            string text = GetText(span);
             if (newText != text)
                 _queuedChanges.Enqueue(new TextChange(span, newText));
         }
@@ -942,7 +942,7 @@ namespace FormatDocXml
 
             Debug.Assert(text == null || text == GetText(span));
 
-            _breakText.Append(text ?? GetText(span));
+            _ = _breakText.Append(text ?? GetText(span));
         }
 
         private void Break(BreakMode nextBreakMode = BreakMode.None)
@@ -975,7 +975,7 @@ namespace FormatDocXml
             }
 
             // Calculate the length of the word.
-            var wordNewTextLength = _wordEnd - _wordStart;
+            int wordNewTextLength = _wordEnd - _wordStart;
             foreach (var change in _wordChanges)
                 wordNewTextLength += change.NewText.Length - change.Span.Length;
 
@@ -987,7 +987,7 @@ namespace FormatDocXml
 
             // Add the break change.
             var breakSpan = TextSpan.FromBounds(_breakStart, _wordStart);
-            var breakText = GetText(breakSpan);
+            string breakText = GetText(breakSpan);
             if (breakNewText != breakText)
                 _changes.Add(new TextChange(breakSpan, breakNewText));
 
@@ -999,7 +999,7 @@ namespace FormatDocXml
             _wordChanges.Clear();
 
             // Prepare for next word.
-            _breakText.Clear();
+            _ = _breakText.Clear();
             _breakStart = _wordEnd;
             _wordStart = _breakStart;
             _breakMode = nextBreakMode;
@@ -1024,7 +1024,7 @@ namespace FormatDocXml
 
             // Add the break change.
             var breakSpan = TextSpan.FromBounds(_breakStart, _wordStart);
-            var breakText = GetText(breakSpan);
+            string breakText = GetText(breakSpan);
             if (breakNewText != breakText)
                 _changes.Add(new TextChange(breakSpan, breakNewText));
         }
@@ -1044,7 +1044,7 @@ namespace FormatDocXml
             }
             else if (_breakMode.HasFlag(BreakMode.Preserve))
             {
-                _stringBuilder.Clear();
+                _ = _stringBuilder.Clear();
                 for (int i = 0; i < _breakText.Length; ++i)
                 {
                     char c = _breakText[i];
@@ -1053,13 +1053,13 @@ namespace FormatDocXml
                         case '\r':
                             break;
                         case '\n':
-                            _stringBuilder
+                            _ = _stringBuilder
                                 .Append(_newLine)
                                 .AppendIndent(_exteriorIndent, _useTabs, _tabSize)
                                 .Append("///");
                             break;
                         default:
-                            _stringBuilder.Append(c);
+                            _ = _stringBuilder.Append(c);
                             break;
                     }
                 }

@@ -35,7 +35,7 @@ namespace FormatDocXml
         /// <returns>The column of the start of the full span of <paramref name="token"/>.</returns>
         /// <exception cref="ArgumentException"><paramref name="token"/> is not contained in a
         ///     <see cref="SyntaxTree"/>.</exception>
-        public static int GetInitialColumn(SyntaxToken token, int tabSize, CancellationToken cancellationToken = default(CancellationToken))
+        public static int GetInitialColumn(SyntaxToken token, int tabSize, CancellationToken cancellationToken = default)
         {
             var syntaxTree = token.SyntaxTree;
             if (syntaxTree == null)

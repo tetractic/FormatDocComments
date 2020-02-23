@@ -68,7 +68,7 @@ namespace FormatDocXml.Commands
             if (document == null)
                 return false;
 
-            _joinableTaskContext.Factory.RunAsync(() => FormatDocXmlInDocumentAsync(document, executionContext.OperationContext.UserCancellationToken));
+            _ = _joinableTaskContext.Factory.RunAsync(() => FormatDocXmlInDocumentAsync(document, executionContext.OperationContext.UserCancellationToken));
 
             return true;
         }
@@ -85,7 +85,7 @@ namespace FormatDocXml.Commands
                 options = options.WithChangedOption(DocXmlFormattingOptions.WrapColumn, await GetGuideColumnAsync(cancellationToken).ConfigureAwait(false));
 
             var changes = await DocXmlFormatter.FormatAsync(document, options, cancellationToken).ConfigureAwait(false);
-            await document.ApplyTextChangesAsync(changes, cancellationToken).ConfigureAwait(false);
+            _ = await document.ApplyTextChangesAsync(changes, cancellationToken).ConfigureAwait(false);
         }
 
         private async Task<int?> GetGuideColumnAsync(CancellationToken cancellationToken)
