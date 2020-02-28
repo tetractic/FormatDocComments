@@ -5,7 +5,7 @@ configuration:
 - Release
 platform: Any CPU
 before_build:
-- pwsh: nuget restore
+- pwsh: nuget restore -Verbosity quiet
 build:
   parallel: true
   verbosity: minimal
