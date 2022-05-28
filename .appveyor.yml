@@ -1,13 +1,14 @@
 version: '{build}'
-image: Visual Studio 2017
+pull_requests:
+  do_not_increment_build_number: true
+image: Visual Studio 2019
 configuration:
 - Debug
 - Release
 platform: Any CPU
 before_build:
-- pwsh: nuget restore -Verbosity quiet
-build:
-  parallel: true
-  verbosity: minimal
+- pwsh: 'Get-ChildItem -Recurse -Include *.csproj | % { [xml]$xml = Get-Content $_; $xml.SelectNodes("/Project/PropertyGroup/FileVersion") | % { $_."#text" += ".${Env:APPVEYOR_BUILD_NUMBER}" }; $xml.SelectNodes("/Project/PropertyGroup/InformationalVersion") | % { $_."#text" += "+${Env:APPVEYOR_REPO_COMMIT}" }; $xml.Save($_) }'
+build_script:
+- ps: msbuild "FormatDocXml.sln" /t:Restore,Build /p:Configuration=$env:CONFIGURATION /p:DeployExtension=false /m /v:minimal /l:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 artifacts:
-- path: FormatDocXml\bin\%configuration%\FormatDocXml.vsix
+- path: FormatDocXml\bin\%configuration%\net46\FormatDocXml.vsix
