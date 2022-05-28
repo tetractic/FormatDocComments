@@ -1,7 +1,7 @@
 # Format Doc Comments
 A Visual Studio extension that formats and word wraps C# documentation comments.
 
-[![Build status](https://ci.appveyor.com/api/projects/status/tj19gcp3on1426wc/branch/master?svg=true)](https://ci.appveyor.com/project/carlreinke/formatdocxml/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/c9ewct203bng87c4/branch/master?svg=true)](https://ci.appveyor.com/project/carlreinke/formatdoccomments/branch/master)
 
 ## Getting Started
 
@@ -25,5 +25,5 @@ the [Editor Guidelines] extension.  If no guidelines are set then it defaults to
 80 columns.
 
 
-[Visual Studio Marketplace]: https://marketplace.visualstudio.com/items?itemName=carlreinke.FormatDocXml
+[Visual Studio Marketplace]: https://marketplace.visualstudio.com/items?itemName=carlreinke.FormatDocComments
 [Editor Guidelines]: https://marketplace.visualstudio.com/items?itemName=PaulHarrington.EditorGuidelines
