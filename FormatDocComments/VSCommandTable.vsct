@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <!--This header defines the IDs for all the commands exposed by VisualStudio. -->
+  <Extern href="stdidcmd.h" />
+
+  <!--This header contains the command ids for the menus provided by the shell. -->
+  <Extern href="vsshlids.h" />
+
+  <Commands package="packageGuid">
+    <Groups>
+      <Group guid="commandSetGuid" id="FormatDocCommentsMenuGroupId" priority="0xFD10">
+        <Parent guid="guidStdEditor" id="IDM_VS_EDITOR_ADVANCED_MENU" />
+      </Group>
+    </Groups>
+
+    <Buttons>
+      <Button guid="commandSetGuid" id="FormatDocCommentsInSelectionCommandId" priority="0x0100" type="Button">
+        <Parent guid="commandSetGuid" id="FormatDocCommentsMenuGroupId" />
+        <Icon guid="imagesGuid" id="FormatDocCommentsInSelectionIconId" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>Format Doc Comments in Selection</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="commandSetGuid" id="FormatDocCommentsInDocumentCommandId" priority="0x0101" type="Button">
+        <Parent guid="commandSetGuid" id="FormatDocCommentsMenuGroupId" />
+        <Icon guid="imagesGuid" id="FormatDocCommentsInDocumentIconId" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>Format Doc Comments in Document</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+
+    <Bitmaps>
+      <Bitmap guid="imagesGuid" href="Resources\FormatDocCommentsCommands.png" usedList="FormatDocCommentsInSelectionIconId, FormatDocCommentsInDocumentIconId" />
+    </Bitmaps>
+  </Commands>
+
+  <KeyBindings>
+    <KeyBinding guid="commandSetGuid" id="FormatDocCommentsInSelectionCommandId" editor="guidVSStd97" key1="e" mod1="Control" key2="x" />
+    <KeyBinding guid="commandSetGuid" id="FormatDocCommentsInDocumentCommandId" editor="guidVSStd97" key1="e" mod1="Control" key2="x" mod2="Control" />
+  </KeyBindings>
+
+  <Symbols>
+    <GuidSymbol name="packageGuid" value="{8288a158-430f-4bc7-9502-0716acc4f964}" />
+
+    <GuidSymbol name="commandSetGuid" value="{ed2fe6df-2ac7-4a91-b899-baed23255208}">
+      <IDSymbol name="FormatDocCommentsMenuGroupId" value="0x1020" />
+      <IDSymbol name="FormatDocCommentsInSelectionCommandId" value="0x0100" />
+      <IDSymbol name="FormatDocCommentsInDocumentCommandId" value="0x0101" />
+    </GuidSymbol>
+
+    <GuidSymbol name="imagesGuid" value="{ece88ab1-2c3f-4c5f-811b-e3e2e9533ddd}" >
+      <IDSymbol name="FormatDocCommentsInSelectionIconId" value="1" />
+      <IDSymbol name="FormatDocCommentsInDocumentIconId" value="2" />
+    </GuidSymbol>
+  </Symbols>
+</CommandTable>
