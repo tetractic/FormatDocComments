@@ -6,6 +6,7 @@
     <Description xml:space="preserve">Formats C# documentation comments.</Description>
     <MoreInfo>https://marketplace.visualstudio.com/items?itemName=carlreinke.FormatDocXml</MoreInfo>
     <License>LICENSE.txt</License>
+    <Icon>PackageIcon.png</Icon>
   </Metadata>
   <Installation>
     <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[15.0,17.0)" />

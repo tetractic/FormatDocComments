@@ -48,6 +48,9 @@
     <Content Include="..\LICENSE.txt" Link="LICENSE.txt">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="PackageIcon.png">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="Resources\FormatDocCommentsCommands.png" />
   </ItemGroup>
 
