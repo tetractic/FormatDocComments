@@ -17,7 +17,7 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestInlineElement()
         {
-            var inputText =
+            string inputText =
     @"public class C {
     /// Words and <see cref=""M1""/> and <c>words</c>.
     public void M1() { }
@@ -28,7 +28,7 @@ namespace FormatDocXml.Tests
     /// <c>words</c>.
     public void M2() { }
 }";
-            var expectedText =
+            string expectedText =
     @"public class C {
     /// Words and <see cref=""M1""/> and <c>words</c>.
     public void M1() { }
@@ -43,7 +43,7 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestInlineElementBreaks()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// Words <c>and</c> words.
     public void M1() { }
@@ -57,7 +57,7 @@ namespace FormatDocXml.Tests
     /// Words<c> and </c>words.
     public void M4() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// Words <c>and</c> words.
     public void M1() { }
@@ -79,7 +79,7 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestInlineElementWraps()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// Words and words and words <c>and</c> words.
     public void M1() { }
@@ -93,7 +93,7 @@ namespace FormatDocXml.Tests
     /// Words and words and <c>words</c> and words.
     public void M4() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// Words and words and words
     /// <c>and</c> words.
@@ -119,12 +119,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestInlineElementWrapsContent()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// Words and words and <c>words and words and</c> words.
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// Words and words and <c>words and
     /// words and</c> words.
@@ -138,12 +138,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestInlineElementSticksWithSurroundingWord()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// __________<c>__________ __________</c>__________
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// __________<c>__________
     /// __________</c>__________
@@ -157,7 +157,7 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestInlineEmptyElementWraps()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// Words and words and <see cref=""M1""/> and words.
     public void M1() { }
@@ -165,7 +165,7 @@ namespace FormatDocXml.Tests
     /// Words and <see cref=""M2(C)""/> and words.
     public void M2(C x) { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// Words and words and
     /// <see cref=""M1""/> and words.
@@ -183,12 +183,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestInlineEmptyElementSticksWithSurroundingWord()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// __________<see cref=""C""/>__________
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// __________<see cref=""C""/>__________
     public void M() { }

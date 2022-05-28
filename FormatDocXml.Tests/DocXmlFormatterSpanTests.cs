@@ -17,7 +17,7 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestSpanWholeDocument()
         {
-            var inputText =
+            string inputText =
 @"/*[*//// <summary>This is C.</summary>
 public class C {
     /// <summary>This is M1.</summary>
@@ -26,7 +26,7 @@ public class C {
     /// <summary>This is M2.</summary>
     public void M2() { }
 }/*]*/";
-            var expectedText =
+            string expectedText =
 @"/// <summary>
 /// This is C.
 /// </summary>
@@ -49,7 +49,7 @@ public class C {
         [Fact]
         public void TestSpanInsideComment()
         {
-            var inputText =
+            string inputText =
 @"/// <summary>This is C.</summary>
 public class C {
     /// <summary>/*[*//*]*/This is M1.</summary>
@@ -58,7 +58,7 @@ public class C {
     /// <summary>This is M2.</summary>
     public void M2() { }
 }";
-            var expectedText =
+            string expectedText =
 @"/// <summary>This is C.</summary>
 public class C {
     /// <summary>
@@ -77,7 +77,7 @@ public class C {
         [Fact]
         public void TestSpanEncompassesComment()
         {
-            var inputText =
+            string inputText =
 @"/// <summary>This is C.</summary>
 public class C /*[*/{
     /// <summary>This is M1.</summary>
@@ -86,7 +86,7 @@ public class C /*[*/{
     /// <summary>This is M2.</summary>
     public void M2() { }
 }";
-            var expectedText =
+            string expectedText =
 @"/// <summary>This is C.</summary>
 public class C {
     /// <summary>
@@ -105,7 +105,7 @@ public class C {
         [Fact]
         public void TestSpanOverlapsCommentStart()
         {
-            var inputText =
+            string inputText =
 @"/// <summary>This is C.</summary>
 public class C /*[*/{
     /// <summary>/*]*/This is M1.</summary>
@@ -114,7 +114,7 @@ public class C /*[*/{
     /// <summary>This is M2.</summary>
     public void M2() { }
 }";
-            var expectedText =
+            string expectedText =
 @"/// <summary>This is C.</summary>
 public class C {
     /// <summary>
@@ -133,7 +133,7 @@ public class C {
         [Fact]
         public void TestSpanOverlapsCommentEnd()
         {
-            var inputText =
+            string inputText =
 @"/// <summary>This is C.</summary>
 public class C {
     /// <summary>/*[*/This is M1.</summary>
@@ -142,7 +142,7 @@ public class C {
     /// <summary>This is M2.</summary>
     public void M2() { }
 }";
-            var expectedText =
+            string expectedText =
 @"/// <summary>This is C.</summary>
 public class C {
     /// <summary>
@@ -161,7 +161,7 @@ public class C {
         [Fact]
         public void TestSpanOverlapsTwoComments()
         {
-            var inputText =
+            string inputText =
 @"/// <summary>This is C.</summary>
 public class C {
     /// <summary>/*[*/This is M1.</summary>
@@ -173,7 +173,7 @@ public class C {
     /// <summary>This is M3.</summary>
     public void M3() { }
 }";
-            var expectedText =
+            string expectedText =
 @"/// <summary>This is C.</summary>
 public class C {
     /// <summary>
@@ -197,7 +197,7 @@ public class C {
         [Fact]
         public void TestSpanAtStartOfComment()
         {
-            var inputText =
+            string inputText =
 @"/// <summary>This is C.</summary>
 public class C {
     /*[*//*]*//// <summary>This is M1.</summary>
@@ -206,7 +206,7 @@ public class C {
     /// <summary>This is M2.</summary>
     public void M2() { }
 }";
-            var expectedText =
+            string expectedText =
 @"/// <summary>This is C.</summary>
 public class C {
     /// <summary>This is M1.</summary>
@@ -223,7 +223,7 @@ public class C {
         [Fact]
         public void TestSpanAtEndOfComment()
         {
-            var inputText =
+            string inputText =
 @"/// <summary>This is C.</summary>
 public class C {
     /// <summary>This is M1.</summary>
@@ -232,7 +232,7 @@ public class C {
     /// <summary>This is M2.</summary>
     public void M2() { }
 }";
-            var expectedText =
+            string expectedText =
 @"/// <summary>This is C.</summary>
 public class C {
     /// <summary>This is M1.</summary>

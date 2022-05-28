@@ -17,7 +17,7 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestCData()
         {
-            var inputText =
+            string inputText =
     @"public class C {
     /// Words and <![CDATA[words and]]> words.
     public void M1() { }
@@ -28,7 +28,7 @@ namespace FormatDocXml.Tests
     /// words.
     public void M2() { }
 }";
-            var expectedText =
+            string expectedText =
     @"public class C {
     /// Words and <![CDATA[words and]]> words.
     public void M1() { }
@@ -43,7 +43,7 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestCDataBreaks()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// Words <![CDATA[and]]> words.
     public void M1() { }
@@ -57,7 +57,7 @@ namespace FormatDocXml.Tests
     /// Words<![CDATA[ and ]]>words.
     public void M4() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// Words <![CDATA[and]]> words.
     public void M1() { }
@@ -79,7 +79,7 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestCDataWraps()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// Words and words and <![CDATA[words]]>.
     public void M1() { }
@@ -93,7 +93,7 @@ namespace FormatDocXml.Tests
     /// Words and words <![CDATA[and]]> words.
     public void M4() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// Words and words and
     /// <![CDATA[words]]>.
@@ -119,12 +119,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestCDataWrapsContent()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// Words and <![CDATA[words and words and]]> words.
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// Words and <![CDATA[words and
     /// words and]]> words.
@@ -138,12 +138,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestCDataSticksWithSurroundingWord()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// __________<![CDATA[__________ __________]]>__________
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// __________<![CDATA[__________
     /// __________]]>__________

@@ -17,7 +17,7 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestComment()
         {
-            var inputText =
+            string inputText =
     @"public class C {
     /// Words and <!--words and--> words.
     public void M1() { }
@@ -28,7 +28,7 @@ namespace FormatDocXml.Tests
     /// words.
     public void M2() { }
 }";
-            var expectedText =
+            string expectedText =
     @"public class C {
     /// Words and <!--words and--> words.
     public void M1() { }
@@ -43,7 +43,7 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestCommentBreaks()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// Words <!--and--> words.
     public void M1() { }
@@ -57,7 +57,7 @@ namespace FormatDocXml.Tests
     /// Words<!-- and -->words.
     public void M4() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// Words <!--and--> words.
     public void M1() { }
@@ -79,7 +79,7 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestCommentWraps()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// Words and words and words <!--and--> words.
     public void M1() { }
@@ -93,7 +93,7 @@ namespace FormatDocXml.Tests
     /// Words and words and <!--words--> and words.
     public void M4() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// Words and words and words
     /// <!--and--> words.
@@ -119,12 +119,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestCommentWrapsContent()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// Words and words and <!--words and words and--> words.
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// Words and words and <!--words
     /// and words and--> words.
@@ -138,12 +138,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestCommentSticksWithSurroundingWord()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// __________<!--__________ __________-->__________
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// __________<!--__________
     /// __________-->__________

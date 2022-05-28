@@ -17,12 +17,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestBlockElementMissingEndTag()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// <summary>Words and words.
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// <summary>
     /// Words and words.
@@ -35,12 +35,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestBlockElementMissingEndTagName()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// <summary>Words and words.</>
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// <summary>
     /// Words and words.
@@ -54,12 +54,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestBlockElementMissingStartTag()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// Words and words.</summary>
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// Words and words.</summary>
     public void M() { }
@@ -71,12 +71,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestBlockElementMissingStartTagName()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// <>Words and words.</summary>
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// <>
     /// Words and words.
@@ -90,7 +90,7 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestBlockElementAttributeTruncated()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// <include file
     public void M1() { }
@@ -107,7 +107,7 @@ namespace FormatDocXml.Tests
     /// <include file=""file.xml""
     public void M5() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// <include file
     public void M1() { }
@@ -131,7 +131,7 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestBlockElementCrefAttributeTruncated()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// <exception cref
     public void M1() { }
@@ -148,7 +148,7 @@ namespace FormatDocXml.Tests
     /// <exception cref=""Exception""
     public void M5() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// <exception cref
     public void M1() { }
@@ -172,12 +172,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestBlockEmptyElementMissingSlash()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// <include file=""file.xml"" path=""*"">
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// <include file=""file.xml"" path=""*"">
     public void M() { }
@@ -189,12 +189,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestInlineElementMissingEndTag()
         {
-            var inputText =
+            string inputText =
     @"public class C {
     /// Words and <c>words.
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
     @"public class C {
     /// Words and <c>words.
     public void M() { }
@@ -206,12 +206,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestInlineElementMissingEndTagName()
         {
-            var inputText =
+            string inputText =
     @"public class C {
     /// Words and <c>words</>.
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
     @"public class C {
     /// Words and <c>words</>.
     public void M() { }
@@ -223,12 +223,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestInlineElementMissingStartTag()
         {
-            var inputText =
+            string inputText =
     @"public class C {
     /// Words and words</c>.
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
     @"public class C {
     /// Words and words</c>.
     public void M() { }
@@ -240,12 +240,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestInlineElementMissingStartTagName()
         {
-            var inputText =
+            string inputText =
     @"public class C {
     /// Words and <>words</c>.
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
     @"public class C {
     /// Words and <>words</c>.
     public void M() { }
@@ -257,12 +257,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestInlineEmptyElementMissingSlash()
         {
-            var inputText =
+            string inputText =
     @"public class C {
     /// Words and <see cref=""M"">.
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
     @"public class C {
     /// Words and <see cref=""M"">.
     public void M() { }
@@ -274,7 +274,7 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestInlineElementAttributeTruncated()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// Words and <see langword
     public void M1() { }
@@ -291,7 +291,7 @@ namespace FormatDocXml.Tests
     /// Words and <see langword=""null""
     public void M5() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// Words and <see langword
     public void M1() { }
@@ -315,7 +315,7 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestInlineElementCrefAttributeTruncated()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// Words and <see cref
     public void M1() { }
@@ -332,7 +332,7 @@ namespace FormatDocXml.Tests
     /// Words and <see cref=""M5""
     public void M5() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// Words and <see cref
     public void M1() { }

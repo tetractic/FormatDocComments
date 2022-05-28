@@ -19,14 +19,14 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestOuterIndentFollowsFirstLine()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// <summary>
 /// Words and words.
   /// </summary>
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// <summary>
     /// Words and words.
@@ -40,14 +40,14 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestOuterIndentEmpty()
         {
-            var inputText =
+            string inputText =
 @"public class C {
 /// <summary>
 /// Words and words.
 /// </summary>
     public void M() { }
 }";
-            var expectedText = inputText;
+            string expectedText = inputText;
 
             AssertFormat(expectedText, inputText);
         }
@@ -55,14 +55,14 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestOuterIndentExcessive()
         {
-            var inputText =
+            string inputText =
 @"public class C {
         /// <summary>
         /// Words and words.
         /// </summary>
     public void M() { }
 }";
-            var expectedText = inputText;
+            string expectedText = inputText;
 
             AssertFormat(expectedText, inputText);
         }
@@ -70,14 +70,14 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestOuterIndentUseTabs()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// <summary>
     /// Words and words.
     /// </summary>
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// <summary>
 " + "\t" + @"/// Words and words.
@@ -92,14 +92,14 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestOuterIndentTabSize()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// <summary>
     /// Words and words.
     /// </summary>
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// <summary>
 " + "\t" + @" /// Words and words.

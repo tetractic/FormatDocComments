@@ -17,12 +17,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestBlockElement()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// <summary>Words and words.</summary>
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// <summary>
     /// Words and words.
@@ -36,12 +36,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestBlockElementEmpty()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// <summary></summary>
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// <summary>
     /// </summary>
@@ -54,12 +54,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestBlockElementSpace()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// <summary> </summary>
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// <summary>
     /// </summary>
@@ -72,12 +72,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestBlockEmptyElement()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// <seealso cref=""M""/>
     public void M() { }
 }";
-            var expectedText = inputText;
+            string expectedText = inputText;
 
             AssertFormat(expectedText, inputText);
         }
@@ -85,12 +85,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestBlockElements()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// <summary>Words and words.</summary><remarks>Words and words and words.</remarks>
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// <summary>
     /// Words and words.
@@ -107,14 +107,14 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestBlockElementWrapsContent()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// <summary>
     /// Words and words and words and words.
     /// </summary>
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// <summary>
     /// Words and words and words and
@@ -130,12 +130,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestSnugBlockElementWrapsContent()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// <param name=""x"">Words and words and words.</param>
     public void M(int x) { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// <param name=""x"">Words and words
     ///     and words.</param>
@@ -149,12 +149,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestSnugBlockElementBreaksEndTagFromContent()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// <param name=""x"">Words and words and words and words...</param>
     public void M(int x) { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// <param name=""x"">Words and words
     ///     and words and words...
@@ -169,12 +169,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestSnugBlockElementBreaksStartTagFromContent()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// <param name=""longParameterName"">Words and words.</param>
     public void M(int longParameterName) { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// <param name=""longParameterName"">
     ///     Words and words.</param>
@@ -188,12 +188,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestSnugBlockElementUnindentsAfterInnerBlock()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// <param name=""x""><para>Words.</para></param>
     public void M(int x) { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// <param name=""x"">
     ///     <para>

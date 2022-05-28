@@ -17,13 +17,13 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestProcessingInstruction()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// <?target and words  and words
     /// and words?>
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// <?target and words  and words
     /// and words?>

@@ -40,7 +40,7 @@ namespace FormatDocXml
 
         private static IEnumerable<int> GetGuideColumns(SettingsStore userSettings)
         {
-            var guides = userSettings.GetString("Text Editor", "Guides", string.Empty).Trim();
+            string guides = userSettings.GetString("Text Editor", "Guides", string.Empty).Trim();
 
             if (string.IsNullOrEmpty(guides) || !guides.StartsWith("RGB(", StringComparison.Ordinal))
                 yield break;
@@ -49,7 +49,7 @@ namespace FormatDocXml
             if (index < 0)
                 yield break;
 
-            foreach (var s in guides.Substring(index + 1).Split(','))
+            foreach (string s in guides.Substring(index + 1).Split(','))
                 if (int.TryParse(s, out int column) && column >= 0)
                     yield return column;
         }

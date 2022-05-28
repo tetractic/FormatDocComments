@@ -17,13 +17,13 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestElementInnerBreaks()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// < exception
     /// cref = ""Exception"" >Words and words.</ exception >
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// <exception cref=""Exception"">Words and words.</exception>
     public void M() { }
@@ -35,13 +35,13 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestEmptyElementInnerBreaks()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// Words and < see
     /// cref = ""M"" />.
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// Words and <see cref=""M""/>.
     public void M() { }
@@ -53,12 +53,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestNamespacedElement()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// <ns:summary>Words and words.</ns:summary>
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// <ns:summary>Words and words.</ns:summary>
     public void M() { }
@@ -70,13 +70,13 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestElementAttributeLineBreak()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// <ns:tag attribute=""
 /// ""/>
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// <ns:tag attribute=""
     /// ""/>

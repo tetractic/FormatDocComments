@@ -17,12 +17,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestEmpty()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     ///
     public void M() { }
 }";
-            var expectedText = inputText;
+            string expectedText = inputText;
 
             AssertFormat(expectedText, inputText);
         }
@@ -30,12 +30,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestSpace()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// 
     public void M() { }
 }";
-            var expectedText = inputText;
+            string expectedText = inputText;
 
             AssertFormat(expectedText, inputText);
         }
@@ -43,12 +43,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestTab()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     ///" + "\t" + @"
     public void M() { }
 }";
-            var expectedText = inputText;
+            string expectedText = inputText;
 
             AssertFormat(expectedText, inputText);
         }
@@ -56,12 +56,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestSpaceSpace()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     ///  
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// 
     public void M() { }
@@ -73,12 +73,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestTabSpace()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     ///" + "\t" + @" 
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     ///" + "\t" + @"
     public void M() { }
@@ -90,14 +90,14 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestInternalLinePrefixEmpty()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     ///<summary>
     ///Words and words.
     ///</summary>
     public void M() { }
 }";
-            var expectedText = inputText;
+            string expectedText = inputText;
 
             AssertFormat(expectedText, inputText);
         }
@@ -105,14 +105,14 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestInternalLinePrefixMismatched()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// <summary>
     ///" + "\t" + @"Words and words.
     /// </summary>
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     ///<summary>
     ///Words and words.
@@ -126,12 +126,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestLeadingSpace()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     ///  Words and words.
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// Words and words.
     public void M() { }
@@ -143,12 +143,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestTrailingSpace()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// Words and words 
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// Words and words
     public void M() { }
@@ -160,13 +160,13 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestLeadingLineBreak()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// 
     /// Words and words.
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// Words and words.
     public void M() { }
@@ -178,13 +178,13 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestTrailingLineBreak()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// Words and words.
     /// 
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// Words and words.
     public void M() { }
@@ -196,7 +196,7 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestSentenceSpaces()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// An extra space is preserved after a sentence end.  Extra  spaces  inside
     /// sentences  are  not  preserved!   It's called ""sentence spacing.""  A
@@ -204,7 +204,7 @@ namespace FormatDocXml.Tests
     /// significant effect on readability...  I happen to prefer it anyway.
     public void M() { }
 }";
-            var wrapped80Text =
+            string wrapped80Text =
 @"public class C {
     /// An extra space is preserved after a sentence end.  Extra spaces inside
     /// sentences are not preserved!  It's called ""sentence spacing.""  A study
@@ -212,7 +212,7 @@ namespace FormatDocXml.Tests
     /// effect on readability...  I happen to prefer it anyway.
     public void M() { }
 }";
-            var wrapped60Text =
+            string wrapped60Text =
 @"public class C {
     /// An extra space is preserved after a sentence end. 
     /// Extra spaces inside sentences are not preserved! 

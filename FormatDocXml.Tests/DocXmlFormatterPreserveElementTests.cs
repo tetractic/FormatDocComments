@@ -17,12 +17,12 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestPreserveNoInnerBreaks()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// <code>Words and words.</code>
     public void M() { }
 }";
-            var expectedText = inputText;
+            string expectedText = inputText;
 
             AssertFormat(expectedText, inputText);
         }
@@ -30,13 +30,13 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestPreserveStartBreak()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// <code>
     /// Words and words.</code>
     public void M() { }
 }";
-            var expectedText = inputText;
+            string expectedText = inputText;
 
             AssertFormat(expectedText, inputText);
         }
@@ -44,13 +44,13 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestPreserveEndBreak()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// <code>Words and words.
     /// </code>
     public void M() { }
 }";
-            var expectedText = inputText;
+            string expectedText = inputText;
 
             AssertFormat(expectedText, inputText);
         }
@@ -58,7 +58,7 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestPreserveWhitespace()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// <code>
     ///   Words and    
@@ -67,7 +67,7 @@ namespace FormatDocXml.Tests
     /// </code>
     public void M() { }
 }";
-            var expectedText = inputText;
+            string expectedText = inputText;
 
             AssertFormat(expectedText, inputText);
         }
@@ -75,14 +75,14 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestPreserveLineBreak()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// <code>
 /// Words and words.
     /// </code>
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// <code>
     /// Words and words.
@@ -96,14 +96,14 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestPreserveLongLines()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// <code>
     ///   Words and words and words and words and words and words.
     /// </code>
     public void M() { }
 }";
-            var expectedText = inputText;
+            string expectedText = inputText;
 
             AssertFormat(expectedText, inputText, (options) => options
                 .WithChangedOption(DocXmlFormattingOptions.WrapColumn, 40));

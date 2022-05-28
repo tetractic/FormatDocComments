@@ -20,10 +20,10 @@ namespace FormatDocXml.Tests
         [Fact]
         public void TestBeginningOfDocument()
         {
-            var inputText =
+            string inputText =
 @"/// Words and words.
 public class C { }";
-            var expectedText = inputText;
+            string expectedText = inputText;
 
             AssertFormat(expectedText, inputText);
         }
@@ -31,11 +31,11 @@ public class C { }";
         [Fact]
         public void TestEndOfDocument()
         {
-            var inputText =
+            string inputText =
 @"public class C { }
 /// Words and words.
 ";
-            var expectedText = inputText;
+            string expectedText = inputText;
 
             AssertFormat(expectedText, inputText);
         }
@@ -43,10 +43,10 @@ public class C { }";
         [Fact]
         public void TestEndOfDocumentNoNewLine()
         {
-            var inputText =
+            string inputText =
 @"public class C { }
 /// Words and words.";
-            var expectedText =
+            string expectedText =
 @"public class C { }
 /// Words and words.
 ";
@@ -57,14 +57,14 @@ public class C { }";
         [Fact]
         public void TestWrapColumn()
         {
-            var inputText =
+            string inputText =
 @"public class C {
     /// _ ______________________________
     /// _ _______________________________
     /// _ ______________________________
     public void M() { }
 }";
-            var expectedText =
+            string expectedText =
 @"public class C {
     /// _ ______________________________
     /// _
@@ -91,7 +91,7 @@ public class C { }";
             var changes = DocXmlFormatter.FormatAsync(document, options).Result;
 #pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
             var newSourceText = sourceText.WithChanges(changes);
-            var outputText = newSourceText.ToString();
+            string outputText = newSourceText.ToString();
 
             Assert.Equal(expectedText, outputText);
         }
@@ -110,18 +110,18 @@ public class C { }";
             var changes = DocXmlFormatter.FormatAsync(document, span, options).Result;
 #pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
             var newSourceText = sourceText.WithChanges(changes);
-            var outputText = newSourceText.ToString();
+            string outputText = newSourceText.ToString();
 
             Assert.Equal(expectedText, outputText);
         }
 
         internal static TextSpan GetSpan(ref string inputText, string startMarker = "/*[*/", string endMarker = "/*]*/")
         {
-            var spanStart = inputText.IndexOf(startMarker);
+            int spanStart = inputText.IndexOf(startMarker);
             if (spanStart < 0)
                 throw new ArgumentException("Span start marker not found.");
             inputText = inputText.Remove(spanStart, startMarker.Length);
-            var spanEnd = inputText.IndexOf(endMarker);
+            int spanEnd = inputText.IndexOf(endMarker);
             if (spanEnd < 0)
                 throw new ArgumentException("Span end marker not found.");
             inputText = inputText.Remove(spanEnd, endMarker.Length);
