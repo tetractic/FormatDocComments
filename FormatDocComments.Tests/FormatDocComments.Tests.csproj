@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FormatDocComments\FormatDocComments.csproj" />
+    <ProjectReference Include="..\FormatDocComments.Vsix.2022\FormatDocComments.Vsix.2022.csproj" />
   </ItemGroup>
 
   <ItemGroup>

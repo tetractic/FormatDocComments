@@ -1,14 +1,15 @@
 version: '{build}'
 pull_requests:
   do_not_increment_build_number: true
-image: Visual Studio 2019
+image: Visual Studio 2022
 configuration:
 - Debug
 - Release
 platform: Any CPU
 before_build:
-- pwsh: 'Get-ChildItem -Recurse -Include *.csproj | % { [xml]$xml = Get-Content $_; $xml.SelectNodes("/Project/PropertyGroup/FileVersion") | % { $_."#text" += ".${Env:APPVEYOR_BUILD_NUMBER}" }; $xml.SelectNodes("/Project/PropertyGroup/InformationalVersion") | % { $_."#text" += "+${Env:APPVEYOR_REPO_COMMIT}" }; $xml.Save($_) }'
+- pwsh: 'Get-ChildItem Directory.Build.props | % { [xml]$xml = Get-Content $_; $xml.SelectNodes("/Project/PropertyGroup/FileVersion") | % { $_."#text" += ".${Env:APPVEYOR_BUILD_NUMBER}" }; $xml.SelectNodes("/Project/PropertyGroup/InformationalVersion") | % { $_."#text" += "+${Env:APPVEYOR_REPO_COMMIT}" }; $xml.Save($_) }'
 build_script:
 - ps: msbuild "FormatDocComments.sln" /t:Restore,Build /p:Configuration=$env:CONFIGURATION /p:DeployExtension=false /m /v:minimal /l:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 artifacts:
-- path: FormatDocComments\bin\%configuration%\net46\FormatDocComments.vsix
+- path: 'FormatDocComments.Vsix.2017\**\*.vsix'
+- path: 'FormatDocComments.Vsix.2022\**\*.vsix'
