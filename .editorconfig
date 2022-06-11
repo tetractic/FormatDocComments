@@ -216,14 +216,8 @@ dotnet_diagnostic.CA1303.severity = none
 # CA2016: Forward the CancellationToken parameter to methods that take one
 dotnet_diagnostic.CA2016.severity = warning
 
-[{*.resx,*.vsct}]
+[{*.csproj,*.resx,*.vsct,*.vsixmanifest,*.xml}]
 indent_size = 2
 indent_style = space
-trim_trailing_whitespace = true
 insert_final_newline = true
-
-[*.vsixmanifest]
-indent_size = 2
-indent_style = space
 trim_trailing_whitespace = true
-insert_final_newline = true

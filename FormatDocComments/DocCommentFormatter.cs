@@ -302,7 +302,9 @@ namespace FormatDocComments
             }
         }
 
+#pragma warning disable CA1704 // Identifiers should be spelled correctly
         private static bool IsWhitespace(char c)
+#pragma warning restore CA1704 // Identifiers should be spelled correctly
         {
             switch (char.GetUnicodeCategory(c))
             {
