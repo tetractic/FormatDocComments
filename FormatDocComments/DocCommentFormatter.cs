@@ -49,7 +49,7 @@ namespace FormatDocComments
             ["returns"] = ElementFormatting.Block | ElementFormatting.Snug | ElementFormatting.Indent,
             ["seealso"] = ElementFormatting.Block | ElementFormatting.Snug | ElementFormatting.Indent,
             ["summary"] = ElementFormatting.Block,
-            ["value"] = ElementFormatting.Block,
+            ["value"] = ElementFormatting.Block | ElementFormatting.Snug | ElementFormatting.Indent,
             ["typeparam"] = ElementFormatting.Block | ElementFormatting.Snug | ElementFormatting.Indent,
 
             ["listheader"] = ElementFormatting.Block | ElementFormatting.Indent,
