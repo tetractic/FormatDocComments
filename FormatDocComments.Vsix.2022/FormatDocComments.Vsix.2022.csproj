@@ -39,6 +39,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.CodingConventions" Version="1.1.20180503.2" />
     <PackageReference Include="Microsoft.VisualStudio.Editor" Version="15.6.27740" />
     <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.0.31902.203" />
     <PackageReference Include="Microsoft.VisualStudio.Shell.15.0" Version="15.0.26201" />
@@ -54,5 +55,12 @@
   <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
 
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
+
+  <Target Name="IncludeNuGetPackageReferences" AfterTargets="GetVsixSourceItems">
+    <ItemGroup>
+      <_ReferenceCopyLocalBinaries Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' != '.pdb'" />
+      <VSIXSourceItem Include="@(_ReferenceCopyLocalBinaries)" Condition="'%(_ReferenceCopyLocalBinaries.NuGetPackageId)' == 'Microsoft.VisualStudio.CodingConventions'" />
+    </ItemGroup>
+  </Target>
 
 </Project>

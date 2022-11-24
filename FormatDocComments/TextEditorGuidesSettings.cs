@@ -1,4 +1,4 @@
-﻿// Copyright 2018 Carl Reinke
+﻿// Copyright 2022 Carl Reinke
 //
 // This file is part of a library that is licensed under the terms of the GNU
 // Lesser General Public License Version 3 as published by the Free Software
@@ -16,7 +16,7 @@ using System.Collections.Generic;
 namespace FormatDocComments
 {
     /// <summary>
-    /// The settings for the text editor guide lines.
+    /// The Visual Studio settings for the text editor guide lines.
     /// </summary>
     /// <remarks>
     /// These settings are editable using the <c>VisualStudioProductTeam.EditorGuidelines</c> or
