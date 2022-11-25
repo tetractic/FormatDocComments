@@ -3,7 +3,7 @@
   <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.props" />
 
   <PropertyGroup>
-    <TargetFramework>net46</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
 
     <LangVersion>7.3</LangVersion>
 
@@ -13,7 +13,7 @@
 
     <RootNamespace>FormatDocComments</RootNamespace>
 
-    <AssemblyName>FormatDocComments2017</AssemblyName>
+    <AssemblyName>FormatDocComments2019</AssemblyName>
 
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <UseCodebase>true</UseCodebase>
@@ -35,7 +35,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="VSPackage.resx">
+    <Compile Include="..\FormatDocComments.Vsix.2022\CodeCleanUpFixer.cs" Link="CodeCleanUpFixer.cs" />
+    <Compile Include="..\FormatDocComments.Vsix.2022\CodeCleanUpFixerDiagnosticIds.cs" Link="CodeCleanUpFixerDiagnosticIds.cs" />
+    <Compile Include="..\FormatDocComments.Vsix.2022\CodeCleanUpFixerProvider.cs" Link="CodeCleanUpFixerProvider.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\FormatDocComments.Vsix.2022\CodeCleanUpFixerResources.resx" Link="CodeCleanUpFixerResources.resx" />
+    <Compile Include="..\FormatDocComments.Vsix.2022\CodeCleanUpFixerResources.Designer.cs" Link="CodeCleanUpFixerResources.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\FormatDocComments.Vsix.2017\VSPackage.resx" Link="VSPackage.resx">
       <MergeWithCTO>true</MergeWithCTO>
       <ManifestResourceName>VSPackage</ManifestResourceName>
       <SubType>Designer</SubType>
@@ -43,20 +54,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="1.0.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.EditorFeatures.Text" Version="1.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.EditorFeatures.Text" Version="3.0.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.CodingConventions" Version="1.1.20180503.2" />
-    <PackageReference Include="Microsoft.VisualStudio.Editor" Version="15.6.27740" />
-    <PackageReference Include="Microsoft.VisualStudio.SDK.EmbedInteropTypes" Version="15.0.27" />
-    <PackageReference Include="Microsoft.VisualStudio.Shell.15.0" Version="15.0.26201" />
+    <PackageReference Include="Microsoft.VisualStudio.Editor" Version="16.1.89" />
+    <PackageReference Include="Microsoft.VisualStudio.LanguageServices" Version="3.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="16.0.203" />
+    <PackageReference Include="Microsoft.VisualStudio.Shell.15.0" Version="16.1.28917.181" />
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="16.11.15">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="System.ComponentModel.Composition" Version="4.5.0" />
     <PackageReference Include="Text.Analyzers" Version="3.3.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

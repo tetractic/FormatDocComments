@@ -12,4 +12,5 @@ build_script:
 - ps: msbuild "FormatDocComments.sln" /t:Restore,Build /p:Configuration=$env:CONFIGURATION /p:DeployExtension=false /m /v:minimal /l:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 artifacts:
 - path: 'FormatDocComments.Vsix.2017\**\*.vsix'
+- path: 'FormatDocComments.Vsix.2019\**\*.vsix'
 - path: 'FormatDocComments.Vsix.2022\**\*.vsix'

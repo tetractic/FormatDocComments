@@ -13,13 +13,13 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Editor.CodeCleanup;
 using Microsoft.VisualStudio.Language.CodeCleanUp;
 using Microsoft.VisualStudio.LanguageServices;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Threading;
 using System;
 using System.ComponentModel.Composition;
 using System.Threading;
 using System.Threading.Tasks;
+using IVsHierarchyItemManager = Microsoft.VisualStudio.Shell.IVsHierarchyItemManager;
 
 namespace FormatDocComments
 {
