@@ -7,9 +7,7 @@
 // This license does not grant rights under trademark law for use of any trade
 // names, trademarks, or service marks.
 
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
-using Microsoft.VisualStudio.CodingConventions;
 using Microsoft.VisualStudio.Commanding;
 using Microsoft.VisualStudio.Editor.Commanding;
 using Microsoft.VisualStudio.Text.Editor;
@@ -17,9 +15,6 @@ using Microsoft.VisualStudio.Threading;
 using Microsoft.VisualStudio.Utilities;
 using System;
 using System.ComponentModel.Composition;
-using System.Threading;
-using System.Threading.Tasks;
-using Task = System.Threading.Tasks.Task;
 
 namespace FormatDocComments.Commands
 {
@@ -32,14 +27,13 @@ namespace FormatDocComments.Commands
     [TextViewRole(PredefinedTextViewRoles.Editable)]
     internal sealed class FormatDocCommentInSelectionCommand : ICommandHandler<FormatDocCommentInSelectionCommandArgs>
     {
+        private readonly FormatDocCommentsService _formatDocCommentsService;
         private readonly JoinableTaskContext _joinableTaskContext;
 
-        [Import(AllowDefault = true)]
-        private readonly ICodingConventionsManager _codingConventionsManager;
-
         [ImportingConstructor]
-        public FormatDocCommentInSelectionCommand(JoinableTaskContext joinableTaskContext)
+        public FormatDocCommentInSelectionCommand(FormatDocCommentsService formatDocCommentsService, JoinableTaskContext joinableTaskContext)
         {
+            _formatDocCommentsService = formatDocCommentsService;
             _joinableTaskContext = joinableTaskContext;
         }
 
@@ -86,7 +80,13 @@ namespace FormatDocComments.Commands
             if (document == null)
                 return false;
 
-            _ = _joinableTaskContext.Factory.RunAsync(() => FormatDocCommentsInSelectionAsync(document, selectionSpan, executionContext.OperationContext.UserCancellationToken));
+            _ = _joinableTaskContext.Factory.RunAsync(async () =>
+            {
+                document = await _formatDocCommentsService.FormatDocCommentsInSelectionAsync(document, selectionSpan, executionContext.OperationContext.UserCancellationToken).ConfigureAwait(true);
+
+                var solution = document.Project.Solution;
+                return solution.Workspace.TryApplyChanges(solution);
+            });
 
             return true;
         }
@@ -94,35 +94,6 @@ namespace FormatDocComments.Commands
         public CommandState GetCommandState(FormatDocCommentInSelectionCommandArgs args)
         {
             return CommandState.Available;
-        }
-
-        private async Task FormatDocCommentsInSelectionAsync(Document document, TextSpan selectionSpan, CancellationToken cancellationToken)
-        {
-            var options = document.Project.Solution.Workspace.Options;
-            if (!options.GetOption(DocCommentFormattingOptions.WrapColumn).HasValue)
-                options = options.WithChangedOption(DocCommentFormattingOptions.WrapColumn, await GetGuideColumnAsync(document.FilePath, cancellationToken).ConfigureAwait(false));
-
-            var changes = await DocCommentFormatter.FormatAsync(document, selectionSpan, options, cancellationToken).ConfigureAwait(false);
-            _ = await document.ApplyTextChangesAsync(changes, cancellationToken).ConfigureAwait(false);
-        }
-
-        private async Task<int?> GetGuideColumnAsync(string filePath, CancellationToken cancellationToken)
-        {
-            if (_codingConventionsManager != null && filePath != null)
-            {
-                var codingConventionContext = await _codingConventionsManager.GetConventionContextAsync(filePath, cancellationToken).ConfigureAwait(false);
-                if (codingConventionContext != null)
-                {
-                    int? column = CodingConventionSettings.GetMaxLineLength(codingConventionContext) ??
-                                  CodingConventionSettings.GetGuideColumns(codingConventionContext).Max();
-                    if (column.HasValue)
-                        return column.Value;
-                }
-            }
-
-            await _joinableTaskContext.Factory.SwitchToMainThreadAsync(cancellationToken);
-
-            return TextEditorGuidesSettings.GetGuideColumns().Max();
         }
     }
 }
