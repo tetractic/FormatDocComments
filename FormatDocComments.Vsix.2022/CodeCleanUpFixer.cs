@@ -44,6 +44,9 @@ namespace FormatDocComments
 
         public Task<bool> FixAsync(ICodeCleanUpScope scope, ICodeCleanUpExecutionContext context)
         {
+            if (!context.EnabledFixIds.IsFixIdEnabled(FormatDocCommentsFixId))
+                return Task.FromResult(true);
+
             switch (scope)
             {
                 case TextBufferCodeCleanUpScope textBufferScope:
