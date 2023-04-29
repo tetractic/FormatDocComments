@@ -35,6 +35,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Resources\FormatDocCommentsCommands.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Update="CodeCleanUpFixerResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>CodeCleanUpFixerResources.Designer.cs</LastGenOutput>
@@ -44,6 +48,13 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>CodeCleanUpFixerResources.resx</DependentUpon>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <VSCTCompile Include="$(MSBuildThisFileDirectory)VSCommandTable.vsct">
+      <ResourceName>Menus.ctmenu</ResourceName>
+      <SubType>Designer</SubType>
+    </VSCTCompile>
   </ItemGroup>
 
   <ItemGroup>

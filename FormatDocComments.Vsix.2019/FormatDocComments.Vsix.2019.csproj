@@ -41,8 +41,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="..\FormatDocComments.Vsix.2022\CodeCleanUpFixerResources.resx" Link="CodeCleanUpFixerResources.resx" />
-    <Compile Include="..\FormatDocComments.Vsix.2022\CodeCleanUpFixerResources.Designer.cs" Link="CodeCleanUpFixerResources.Designer.cs" />
+    <EmbeddedResource Include="..\FormatDocComments.Vsix.2022\CodeCleanUpFixerResources.resx" Link="CodeCleanUpFixerResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CodeCleanUpFixerResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <Compile Include="..\FormatDocComments.Vsix.2022\CodeCleanUpFixerResources.Designer.cs" Link="CodeCleanUpFixerResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CodeCleanUpFixerResources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\FormatDocComments.Vsix.2017\Resources\FormatDocCommentsCommands.png" Link="Resources\FormatDocCommentsCommands.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -51,6 +62,13 @@
       <ManifestResourceName>VSPackage</ManifestResourceName>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <VSCTCompile Include="..\FormatDocComments.Vsix.2017\VSCommandTable.vsct" Link="VSCommandTable.vsct">
+      <ResourceName>Menus.ctmenu</ResourceName>
+      <SubType>Designer</SubType>
+    </VSCTCompile>
   </ItemGroup>
 
   <ItemGroup>

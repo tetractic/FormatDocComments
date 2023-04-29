@@ -9,11 +9,6 @@
     <Import_RootNamespace>FormatDocComments</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)VSCommandTable.vsct">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)*.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands\*.cs" />
   </ItemGroup>
@@ -27,12 +22,5 @@
     <Content Include="$(MSBuildThisFileDirectory)PackageIcon.png">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="$(MSBuildThisFileDirectory)Resources\FormatDocCommentsCommands.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <VSCTCompile Include="$(MSBuildThisFileDirectory)VSCommandTable.vsct">
-      <ResourceName>Menus.ctmenu</ResourceName>
-      <SubType>Designer</SubType>
-    </VSCTCompile>
   </ItemGroup>
 </Project>

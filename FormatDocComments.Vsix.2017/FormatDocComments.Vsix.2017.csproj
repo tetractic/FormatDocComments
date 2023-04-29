@@ -35,11 +35,22 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Resources\FormatDocCommentsCommands.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Update="VSPackage.resx">
       <MergeWithCTO>true</MergeWithCTO>
       <ManifestResourceName>VSPackage</ManifestResourceName>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <VSCTCompile Include="$(MSBuildThisFileDirectory)VSCommandTable.vsct">
+      <ResourceName>Menus.ctmenu</ResourceName>
+      <SubType>Designer</SubType>
+    </VSCTCompile>
   </ItemGroup>
 
   <ItemGroup>
